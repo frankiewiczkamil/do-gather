@@ -1,5 +1,6 @@
 import Link from 'next/link';
-export default function TodoListPreview({ name, tasks, id, url }: TodoList & { url: string }) {
+
+export default function TodoListPreview({ name, tasks, url }: TodoList & { url: string; key: string }) {
   return (
     <div className="flex space-x-1 border" key={name}>
       <div className="basis-3/12">{name}</div>

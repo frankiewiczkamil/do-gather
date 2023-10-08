@@ -1,24 +1,15 @@
-import { addTodoLists, getTodoLists } from '@/services/todo-lists/todoListService';
+import { getTodoLists } from '@/services/todo-lists/todoListService';
 import TodoListPreview from '@/components/TodoListPreview';
+import { PATH } from '@/app/todo-lists/common';
+import { create } from '@/app/todo-lists/actions';
 
-type PageProps = {
-  params: { slug: string };
-  searchParams?: CreateTodoListDto;
-};
-const PATH = '/todo-lists'; // can't find a way to get it from next for now
-
-export default function TodoList({ params, searchParams }: PageProps) {
-  // this will be most likely replaced by next's server actions (it's not a stable feature yet)
-  if (typeof searchParams?.name === 'string') {
-    addTodoLists(searchParams);
-  }
-  const lists = getTodoLists().map(addUrl);
+export default function TodoList() {
   return (
     <main className="flex min-h-screen flex-col items-start p-4">
       <h2 className="border text-center w-full text-xl">All your lists</h2>
       <div className="w-full border">
         <h4 className="border w-full">Add new list</h4>
-        <form>
+        <form action={create}>
           <div>
             <label htmlFor="new-todo-list-name" className="">
               List name
@@ -31,11 +22,15 @@ export default function TodoList({ params, searchParams }: PageProps) {
         </form>
       </div>
 
-      <div className="w-full items-center border">{lists.map(TodoListPreview)}</div>
+      <div className="w-full items-center border">{getTodoLists().map(toTodoListPreview)}</div>
     </main>
   );
 }
 
-function addUrl(list: TodoList) {
-  return { ...list, url: `${PATH}/${list.id}` };
+function toTodoPreviewListProps(list: TodoList) {
+  return { ...list, url: `${PATH}/${list.id}`, key: list.id };
+}
+
+function toTodoListPreview(todoList: TodoList) {
+  return <TodoListPreview {...toTodoPreviewListProps(todoList)} />;
 }
