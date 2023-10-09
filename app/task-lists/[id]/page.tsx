@@ -1,8 +1,8 @@
-import { getTasks } from '@/services/todo-lists/todoListService';
+import { getTasks } from '@/services/lists/TaskListService';
 import TaskPreview from '@/components/TaskPreview';
-import { createAddTaskToListAction } from '@/app/todo-lists/[id]/actions';
+import { createAddTaskToListAction } from '@/app/task-lists/[id]/actions';
 
-export default function TodoList({ params }: { params: { id: string } }) {
+export default function TaskListMainView({ params }: { params: { id: string } }) {
   return (
     <main className="flex min-h-screen flex-col items-start  p-4">
       <h2 className="border text-center w-full text-xl">Tasks to be done</h2>

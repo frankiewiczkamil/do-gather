@@ -1,11 +1,10 @@
-type TodoList = {
+type TaskList = {
   id: string;
   name: string;
   tasks: Task[];
-  // todo createdBy, users
 };
 
-type CreateTodoListDto = {
+type CreateTaskListDto = {
   name: string;
   tasks?: Task[];
 };
