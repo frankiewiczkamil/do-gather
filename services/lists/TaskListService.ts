@@ -29,7 +29,7 @@ export function getTaskLists(): TaskList[] {
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
   const newTaskList = { ...createTaskListDto, id: createTaskListId(), tasks: createTaskListDto.tasks || [] };
-  console.log(newTaskList);
   lists.push(newTaskList);
+  tasksByTaskListId[newTaskList.id] = newTaskList.tasks;
   return newTaskList.id;
 }
