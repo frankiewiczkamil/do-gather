@@ -1,22 +1,14 @@
-import { addTask, getTasks } from '@/services/todo-lists/todoListService';
+import { getTasks } from '@/services/todo-lists/todoListService';
 import TaskPreview from '@/components/TaskPreview';
+import { createAddTaskToListAction } from '@/app/todo-lists/[id]/actions';
 
-type PageProps = {
-  params: { id: string };
-  searchParams?: CreateTaskDto;
-};
-
-export default function TodoList({ params, searchParams }: PageProps) {
-  // this will be most likely replaced by next's server actions (it's not a stable feature yet)
-  if (typeof searchParams?.name === 'string') {
-    addTask(params.id, searchParams);
-  }
+export default function TodoList({ params }: { params: { id: string } }) {
   return (
     <main className="flex min-h-screen flex-col items-start  p-4">
       <h2 className="border text-center w-full text-xl">Tasks to be done</h2>
       <div className="w-full border">
         <h4 className="border w-full">Add new task</h4>
-        <form>
+        <form action={createAddTaskToListAction(params.id)}>
           <div>
             <label htmlFor="new-task-name" className="">
               Task name
