@@ -1,35 +1,26 @@
-import { list1, list2 } from '@/data/fakeData';
+import { randomUUID } from 'crypto';
+import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
 
-const lists: TaskList[] = [list1, list2];
-const tasksByTaskListId: Record<string, Task[]> = {
-  [list1.id]: list1.tasks,
-  [list2.id]: list2.tasks,
-};
-
-let id = 0;
-
-const createTaskId = () => `${++id}`;
-const createTaskListId = () => `${++id}`;
-
+// for now this application service is just a proxy to the repository as there are no business rules yet
+// but when business rules arise, this service will translate DTOs to domain objects and call the domain service
 export function addTask(taskListId: string, task: CreateTaskDto) {
   const newTask = {
     ...task,
-    id: createTaskId(),
+    id: randomUUID(),
     status: 'new',
   };
-  tasksByTaskListId[taskListId].push(newTask);
+  taskListRepository.saveTask(taskListId, newTask);
 }
 export function getTasks(taskListId: string): Task[] {
-  return tasksByTaskListId[taskListId];
+  return taskListRepository.findTaskListById(taskListId)?.tasks || [];
 }
 
 export function getTaskLists(): TaskList[] {
-  return lists;
+  return taskListRepository.findAllTaskLists();
 }
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
-  const newTaskList = { ...createTaskListDto, id: createTaskListId(), tasks: createTaskListDto.tasks || [] };
-  lists.push(newTaskList);
-  tasksByTaskListId[newTaskList.id] = newTaskList.tasks;
+  const newTaskList = { ...createTaskListDto, id: randomUUID(), tasks: createTaskListDto.tasks || [] };
+  taskListRepository.saveTaskList(newTaskList);
   return newTaskList.id;
 }
