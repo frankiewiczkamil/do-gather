@@ -32,5 +32,7 @@ function toTaskPreviewListProps(list: TaskList) {
 }
 
 function toTaskListPreview(taskList: TaskList) {
-  return <TaskListPreview {...toTaskPreviewListProps(taskList)} />;
+  const allProps = toTaskPreviewListProps(taskList);
+  // key extracted directly due: "Warning: A props object containing a "key" prop is being spread into JSX"
+  return <TaskListPreview {...allProps} key={allProps.key} />;
 }
