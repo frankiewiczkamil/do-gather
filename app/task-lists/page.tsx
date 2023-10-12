@@ -1,7 +1,7 @@
 import { getTaskLists } from '@/services/lists/TaskListService';
 import TaskListPreview from '@/components/TaskListPreview';
 import { PATH } from '@/app/task-lists/common';
-import { create } from '@/app/task-lists/actions';
+import { createTaskList } from '@/app/task-lists/actions';
 
 export default function TaskListMainView() {
   return (
@@ -9,7 +9,7 @@ export default function TaskListMainView() {
       <h2 className="border text-center w-full text-xl">All your lists</h2>
       <div className="w-full border">
         <h4 className="border w-full">Add new list</h4>
-        <form action={create}>
+        <form action={createTaskList}>
           <div>
             <label htmlFor="new-task-list-name" className="">
               List name

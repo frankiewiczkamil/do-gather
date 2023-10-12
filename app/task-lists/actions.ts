@@ -1,11 +1,11 @@
-import { redirect } from 'next/navigation';
 import { PATH } from '@/app/task-lists/common';
 import { addTaskList } from '@/services/lists/TaskListService';
+import { revalidatePath } from 'next/cache';
 
-export async function create(formData: FormData) {
+export async function createTaskList(formData: FormData) {
   'use server';
   addTaskList(formDataToCreateTaskListDto(formData));
-  redirect(PATH);
+  revalidatePath(PATH);
 }
 
 function formDataToCreateTaskListDto(formData: FormData) {

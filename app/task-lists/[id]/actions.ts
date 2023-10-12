@@ -1,13 +1,13 @@
 import { addTask } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
-import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export function createAddTaskToListAction(taskListId: string) {
   return async function addTaskToListAction(formData: FormData) {
     'use server';
     const createTaskDto = formDataToCreateTaskListDto(formData);
     addTask(taskListId, createTaskDto);
-    redirect(`${PATH}/${taskListId}`);
+    revalidatePath(`${PATH}/${taskListId}`);
   };
 }
 
