@@ -18,6 +18,9 @@ export function getTasks(taskListId: string): Task[] {
 export function getTaskLists(): TaskList[] {
   return taskListRepository.findAllTaskLists();
 }
+export function getTaskList(id: string) {
+  return taskListRepository.findTaskListById(id);
+}
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
   const newTaskList = { ...createTaskListDto, id: randomUUID(), tasks: createTaskListDto.tasks || [] };

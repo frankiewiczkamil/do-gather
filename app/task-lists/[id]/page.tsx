@@ -1,12 +1,13 @@
-import { getTasks } from '@/services/lists/TaskListService';
+import { getTaskList } from '@/services/lists/TaskListService';
 import TaskPreview from '@/components/TaskPreview';
 import { createAddTaskToListAction } from '@/app/task-lists/[id]/actions';
 
 type Params = { params: { id: string } };
 export default function TaskListMainView({ params }: Params) {
+  const { name, tasks } = getTaskList(params.id);
   return (
     <main className="flex min-h-screen flex-col items-start  p-4">
-      <h2 className="border text-center w-full text-xl">Tasks to be done</h2>
+      <h2 className="border text-center w-full text-xl">{name}</h2>
       <div className="w-full border">
         <h4 className="border w-full">Add new task</h4>
         <form action={createAddTaskToListAction(params.id)}>
@@ -28,7 +29,7 @@ export default function TaskListMainView({ params }: Params) {
         </form>
       </div>
 
-      <div className="w-full items-center border">{getTasks(params.id).map(TaskPreview)}</div>
+      <div className="w-full items-center border">{tasks.map(TaskPreview)}</div>
     </main>
   );
 }
