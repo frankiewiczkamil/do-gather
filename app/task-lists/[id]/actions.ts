@@ -1,6 +1,7 @@
-import { addTask } from '@/services/lists/TaskListService';
+import { addTask, deleteTaskList } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export function createAddTaskToListAction(taskListId: string) {
   return async function addTaskToListAction(formData: FormData) {
@@ -16,5 +17,14 @@ function formDataToCreateTaskListDto(formData: FormData) {
   return {
     name: formData.get('name') as string,
     description: formData.get('description') as string,
+  };
+}
+
+export function createDeleteTaskListAction(taskListId: string) {
+  return async function deleteTaskListAction() {
+    'use server';
+    deleteTaskList(taskListId);
+    revalidatePath(PATH);
+    redirect(PATH);
   };
 }

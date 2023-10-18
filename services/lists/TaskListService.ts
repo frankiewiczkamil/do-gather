@@ -27,3 +27,7 @@ export function addTaskList(createTaskListDto: CreateTaskListDto): string {
   taskListRepository.saveTaskList(newTaskList);
   return newTaskList.id;
 }
+
+export function deleteTaskList(id: string) {
+  taskListRepository.deleteTaskList(id);
+}

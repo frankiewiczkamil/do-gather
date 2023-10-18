@@ -23,4 +23,9 @@ function findAllTaskLists() {
   return lists;
 }
 
-export default { saveTaskList, saveTask, findTaskListById, findAllTaskLists } as TaskListCommand & TaskListQuery;
+function deleteTaskList(id: string) {
+  const index = lists.findIndex((list) => list.id === id);
+  lists.splice(index, 1);
+}
+
+export default { saveTaskList, saveTask, findTaskListById, findAllTaskLists, deleteTaskList } as TaskListCommand & TaskListQuery;
