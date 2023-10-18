@@ -3,6 +3,8 @@ import TaskListPreview from '@/components/TaskListPreview';
 import { PATH } from '@/app/task-lists/common';
 import { createTaskList } from '@/app/task-lists/actions';
 
+// it seems that for some reason revalidation from [id]/action doesn't work, thus we need to force dynamic for now
+export const dynamic = 'force-dynamic';
 export default function TaskListMainView() {
   return (
     <main className="flex min-h-screen flex-col items-start p-4">

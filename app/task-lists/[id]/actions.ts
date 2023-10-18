@@ -8,6 +8,7 @@ export function createAddTaskToListAction(taskListId: string) {
     const createTaskDto = formDataToCreateTaskListDto(formData);
     addTask(taskListId, createTaskDto);
     revalidatePath(`${PATH}/${taskListId}`);
+    revalidatePath(PATH); // it doesn't work for now (v13.5.5), thus task-list uses const dynamic = 'force-dynamic' as a workaround
   };
 }
 
