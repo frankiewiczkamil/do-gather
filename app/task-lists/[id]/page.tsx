@@ -1,6 +1,6 @@
 import { getTaskList } from '@/services/lists/TaskListService';
 import TaskPreview from '@/components/TaskPreview';
-import { createAddTaskToListAction, createDeleteTaskListAction } from '@/app/task-lists/[id]/actions';
+import { createAddTaskToListAction, createDeleteTaskListAction, createRenameTaskListAction } from '@/app/task-lists/[id]/actions';
 
 type Params = { params: { id: string } };
 export default function TaskListMainView({ params }: Params) {
@@ -31,6 +31,13 @@ export default function TaskListMainView({ params }: Params) {
         </div>
         <div className="border border-red-600 inline-block basis-1/2">
           <h4 className="border w-full">List settings</h4>
+          <form action={createRenameTaskListAction(params.id)}>
+            <label htmlFor="new-task-list-name">Rename task list</label>
+            <input type={'text'} className="border" defaultValue={name} id={'new-task-list-name'} name={'new-task-list-name'} />
+            <button className="border-2" type="submit">
+              update
+            </button>
+          </form>
           <form>
             <button className="border-2" formAction={createDeleteTaskListAction(params.id)}>
               Delete list

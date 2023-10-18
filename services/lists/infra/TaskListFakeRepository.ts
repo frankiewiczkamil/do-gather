@@ -28,4 +28,13 @@ function deleteTaskList(id: string) {
   lists.splice(index, 1);
 }
 
-export default { saveTaskList, saveTask, findTaskListById, findAllTaskLists, deleteTaskList } as TaskListCommand & TaskListQuery;
+function updateTaskListName(id: string, newName: string) {
+  const taskList = findTaskListById(id);
+  if (taskList === undefined) {
+    throw new Error('TaskList not found');
+  } else {
+    taskList.name = newName;
+  }
+}
+
+export default { saveTaskList, saveTask, findTaskListById, findAllTaskLists, deleteTaskList, updateTaskListName } as TaskListCommand & TaskListQuery;

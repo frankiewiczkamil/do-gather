@@ -1,4 +1,4 @@
-import { addTask, deleteTaskList } from '@/services/lists/TaskListService';
+import { addTask, deleteTaskList, renameTaskList } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -26,5 +26,19 @@ export function createDeleteTaskListAction(taskListId: string) {
     deleteTaskList(taskListId);
     revalidatePath(PATH);
     redirect(PATH);
+  };
+}
+
+export function createRenameTaskListAction(taskListId: string) {
+  return async function renameTaskAction(formData: FormData) {
+    'use server';
+    const { name } = formDataToRenameTaskListDto(formData);
+    renameTaskList(taskListId, name);
+    revalidatePath(PATH);
+  };
+}
+function formDataToRenameTaskListDto(formData: FormData) {
+  return {
+    name: formData.get('new-task-list-name') as string,
   };
 }
