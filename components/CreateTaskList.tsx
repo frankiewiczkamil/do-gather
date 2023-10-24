@@ -1,13 +1,9 @@
 import Link from 'next/link';
+import { Modal } from '@/components/Modal';
 
 export function AddNew({ createTaskListAction, closePath }: { createTaskListAction: (formData: FormData) => Promise<void>; closePath: string }) {
   return (
-    <div
-      id="modal"
-      tabIndex={-1}
-      aria-hidden="true"
-      className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-4/6 overflow-x-hidden overflow-y-auto bg-white max-w-2xl border rounded-lg shadow dark:bg-gray-700"
-    >
+    <Modal>
       <form action={createTaskListAction}>
         <div className="flex items-start justify-between p-3 border-b rounded-t dark:border-gray-600 bg-gray-50">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Add new list</h3>
@@ -60,6 +56,6 @@ export function AddNew({ createTaskListAction, closePath }: { createTaskListActi
           </button>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 }
