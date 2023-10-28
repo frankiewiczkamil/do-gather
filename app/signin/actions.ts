@@ -2,6 +2,7 @@ import { LoginUserDto } from '@/services/users/User';
 import { loginUser } from '@/services/users/UsersService';
 import { redirect } from 'next/navigation';
 
+// todo merge with next-auth
 export async function signIn(formData: FormData) {
   'use server';
   const loginUserDto = formDataToRegisterDto(formData);

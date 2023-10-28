@@ -9,9 +9,6 @@ export function registerUser(userDto: RegisterUserDto) {
   console.log('users', users);
 }
 
-export function loginUser(credentials: LoginUserDto) {
-  const user = users[credentials.email];
-  if (!user) throw new Error('User not found');
-  if (user.password !== credentials.password) throw new Error('Invalid password');
-  return user;
+export function loginUser(credentials: LoginUserDto): User | null {
+  return users[credentials.email] ?? null;
 }

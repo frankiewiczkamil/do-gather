@@ -1,6 +1,7 @@
 import { Modal } from '@/components/modal/Modal';
 import { signIn } from '@/app/signin/actions';
 
+// todo merge with next-auth
 export default function SignUp() {
   return (
     <main className="flex min-h-screen flex-col items-start p-4 ">
