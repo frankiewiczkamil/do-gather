@@ -20,6 +20,20 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ user, token }) {
+      if (user) {
+        token.user = { id: user.id };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token?.user) {
+        session.user = token.user;
+      }
+      return session;
+    },
+  },
   session: { strategy: 'jwt' },
 };
 
