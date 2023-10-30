@@ -1,9 +1,11 @@
 import { getTaskLists } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
-import { createTaskList } from '@/app/task-lists/actions';
+import { createTaskListFactory } from '@/app/task-lists/actions';
 import Link from 'next/link';
 import { AddNew } from '@/components/CreateTaskList';
 import { TaskListsTable } from '@/components/TaskListPreview';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getServerSession } from 'next-auth';
 
 // it seems that for some reason revalidation from [id]/action doesn't work, thus we need to force dynamic for now
 export const dynamic = 'force-dynamic';
@@ -11,13 +13,16 @@ export const dynamic = 'force-dynamic';
 type Props = {
   searchParams: Record<string, string> | undefined;
 };
-export default function TaskListMainView({ searchParams }: Props) {
-  const taskLists = getTaskLists();
+export default async function TaskListMainView({ searchParams }: Props) {
+  const session = await getServerSession(authOptions);
+  const user = session?.user as { id: string };
+  const taskLists = getTaskLists(user.id);
+  const createTaskListCallback = createTaskListFactory(user.id);
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
       <h2 className="text-center w-full text-xl pb-3">All your lists</h2>
 
-      {searchParams?.hasOwnProperty('new') && <AddNew createTaskListAction={createTaskList} closePath={PATH} />}
+      {searchParams?.hasOwnProperty('new') && <AddNew createTaskListAction={createTaskListCallback} closePath={PATH} />}
       <div className="max-w-screen-xl w-full mx-auto">
         <TaskListsTable taskLists={taskLists} path={PATH} />
         <div className="float-right pt-2">

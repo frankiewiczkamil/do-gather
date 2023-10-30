@@ -15,8 +15,8 @@ export function getTasks(taskListId: string): Task[] {
   return taskListRepository.findTaskListById(taskListId)?.tasks || [];
 }
 
-export function getTaskLists(): TaskList[] {
-  return taskListRepository.findAllTaskLists();
+export function getTaskLists(ownerId: string): TaskList[] {
+  return taskListRepository.findAllTaskListsByOwnerId(ownerId);
 }
 export function getTaskList(id: string) {
   return taskListRepository.findTaskListById(id);

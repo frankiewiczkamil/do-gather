@@ -14,9 +14,11 @@ export const list1 = {
   id: 'list-1',
   name: 'pierwsze lista',
   tasks: tasks1,
+  ownerId: 'zenek',
 };
 export const list2 = {
   id: 'list-2',
   name: 'second list',
   tasks: tasks2,
+  ownerId: 'zenek',
 };

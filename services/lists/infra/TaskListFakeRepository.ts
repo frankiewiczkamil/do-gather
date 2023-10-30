@@ -22,6 +22,9 @@ function findTaskListById(id: string) {
 function findAllTaskLists() {
   return lists;
 }
+function findAllTaskListsByOwnerId(ownerId: string) {
+  return lists.filter((list) => list.ownerId === ownerId);
+}
 
 function deleteTaskList(id: string) {
   const index = lists.findIndex((list) => list.id === id);
@@ -37,4 +40,12 @@ function updateTaskListName(id: string, newName: string) {
   }
 }
 
-export default { saveTaskList, saveTask, findTaskListById, findAllTaskLists, deleteTaskList, updateTaskListName } as TaskListCommand & TaskListQuery;
+export default {
+  saveTaskList,
+  saveTask,
+  findTaskListById,
+  findAllTaskListsByOwnerId,
+  findAllTaskLists,
+  deleteTaskList,
+  updateTaskListName,
+} as TaskListCommand & TaskListQuery;
