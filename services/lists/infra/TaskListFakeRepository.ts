@@ -22,8 +22,8 @@ function findTaskListById(id: string) {
 function findAllTaskLists() {
   return lists;
 }
-function findAllTaskListsByOwnerId(ownerId: string) {
-  return lists.filter((list) => list.ownerId === ownerId);
+function findAllAllowedTaskListsForUser(ownerId: string) {
+  return lists.filter((list) => list.ownerId === ownerId || list.users.some((user) => user.userId === ownerId));
 }
 
 function deleteTaskList(id: string) {
@@ -44,7 +44,7 @@ export default {
   saveTaskList,
   saveTask,
   findTaskListById,
-  findAllTaskListsByOwnerId,
+  findAllAllowedTaskListsForUser,
   findAllTaskLists,
   deleteTaskList,
   updateTaskListName,

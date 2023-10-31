@@ -7,5 +7,5 @@ export type TaskListCommand = {
 export type TaskListQuery = {
   findTaskListById: (id: string) => TaskList;
   findAllTaskLists: () => TaskList[];
-  findAllTaskListsByOwnerId: (ownerId: string) => TaskList[];
+  findAllAllowedTaskListsForUser: (ownerId: string) => TaskList[];
 };

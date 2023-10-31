@@ -16,7 +16,7 @@ export function getTasks(taskListId: string): Task[] {
 }
 
 export function getTaskLists(ownerId: string): TaskList[] {
-  return taskListRepository.findAllTaskListsByOwnerId(ownerId);
+  return taskListRepository.findAllAllowedTaskListsForUser(ownerId);
 }
 export function getTaskList(id: string) {
   return taskListRepository.findTaskListById(id);

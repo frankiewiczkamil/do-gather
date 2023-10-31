@@ -10,15 +10,20 @@ export const tasks2: Task[] = [
   { id: 'world', name: 'drugie zadanie', description: lorem, status: 'new' },
 ];
 
-export const list1 = {
+export const list1: TaskList = {
   id: 'list-1',
   name: 'pierwsze lista',
   tasks: tasks1,
   ownerId: 'zenek',
+  users: [
+    { role: 'editor', userId: 'zenek' },
+    { role: 'viewer', userId: 'halinka' },
+  ],
 };
-export const list2 = {
+export const list2: TaskList = {
   id: 'list-2',
   name: 'second list',
   tasks: tasks2,
   ownerId: 'zenek',
+  users: [{ role: 'editor', userId: 'zenek' }],
 };
