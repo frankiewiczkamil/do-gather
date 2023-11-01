@@ -1,7 +1,8 @@
-import { addTask, deleteTaskList, renameTaskList } from '@/services/lists/TaskListService';
+import { addTask, deleteTaskList, inviteUserToTaskList, renameTaskList } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { getUserIdByEmail } from '@/services/users/UsersService';
 
 export function createAddTaskToListAction(taskListId: string) {
   return async function addTaskToListAction(formData: FormData) {
@@ -40,5 +41,22 @@ export function createRenameTaskListAction(taskListId: string) {
 function formDataToRenameTaskListDto(formData: FormData) {
   return {
     name: formData.get('new-task-list-name') as string,
+  };
+}
+
+export function createInviteUserToTaskListAction(taskListId: string) {
+  return async function inviteUserToTaskListAction(formData: FormData) {
+    'use server';
+    const { userEmail, isEditor } = formDataToInviteUserToTaskListDto(formData);
+    const userId = getUserIdByEmail(userEmail);
+    inviteUserToTaskList(userId, taskListId, isEditor);
+  };
+}
+
+function formDataToInviteUserToTaskListDto(formData: FormData) {
+  console.log('formDataToInviteUserToTaskListDto', formData.get('is-editor'), formData.get('user-email'));
+  return {
+    userEmail: formData.get('user-email') as string,
+    isEditor: formData.get('is-editor') === 'is-editor',
   };
 }

@@ -1,10 +1,16 @@
 import { getTaskList } from '@/services/lists/TaskListService';
 import TaskPreview from '@/components/TaskPreview';
 import { AddNewTask } from '@/components/AddNewTask';
-import { createAddTaskToListAction, createDeleteTaskListAction, createRenameTaskListAction } from '@/app/task-lists/[id]/actions';
+import {
+  createAddTaskToListAction,
+  createDeleteTaskListAction,
+  createInviteUserToTaskListAction,
+  createRenameTaskListAction,
+} from '@/app/task-lists/[id]/actions';
 import Link from 'next/link';
 import { RenameTaskList } from '@/components/RenameTaskList';
 import { PATH } from '@/app/task-lists/common';
+import { InviteUserToTaskList } from '@/components/InviteUserToTaskList';
 
 type Params = { params: { id: string }; searchParams: Record<string, string> | undefined };
 export default function TaskListMainView({ params, searchParams }: Params) {
@@ -60,10 +66,28 @@ export default function TaskListMainView({ params, searchParams }: Params) {
               </Link>
             </label>
           </div>
+
+          <div className="basis-1/2">
+            <label htmlFor="invite-user" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Invite another user &nbsp;
+              <Link href={`${params.id}?invite-user`}>
+                <button
+                  id="invite-user"
+                  type="button"
+                  className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                >
+                  Invite
+                </button>
+              </Link>
+            </label>
+          </div>
         </div>
       </div>
       <div className="w-full items-center">{tasks.map(TaskPreview)}</div>
 
+      {searchParams?.hasOwnProperty('invite-user') && (
+        <InviteUserToTaskList closePath={`${PATH}/${params.id}`} inviteUser={createInviteUserToTaskListAction(params.id)} />
+      )}
       {searchParams?.hasOwnProperty('new-task') && <AddNewTask closePath={`${PATH}/${params.id}`} addTaskToListAction={createAddTaskToListAction(params.id)} />}
       {searchParams?.hasOwnProperty('rename-task-list') && (
         <RenameTaskList name={name} renameTaskListAction={createRenameTaskListAction(params.id)} closePath={`${PATH}/${params.id}`} />

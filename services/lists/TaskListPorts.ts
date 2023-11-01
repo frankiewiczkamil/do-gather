@@ -9,3 +9,15 @@ export type TaskListQuery = {
   findAllTaskLists: () => TaskList[];
   findAllAllowedTaskListsForUser: (ownerId: string) => TaskList[];
 };
+
+export type TaskListInvitationQuery = {
+  findInvitationByUserId: (userId: string) => Invitation[];
+};
+
+export type TaskListInvitationCommand = {
+  saveInvitation: (invitation: InvitationDto) => void;
+};
+
+export type UserIdByEmail = {
+  getUserIdByEmail: (email: string) => string;
+};

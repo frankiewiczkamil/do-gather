@@ -12,3 +12,7 @@ export function registerUser(userDto: RegisterUserDto) {
 export function loginUser(credentials: LoginUserDto): User | null {
   return users[credentials.email] ?? null;
 }
+
+export function getUserIdByEmail(email: string) {
+  return users[email]?.id;
+}

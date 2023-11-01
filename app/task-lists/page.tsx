@@ -1,4 +1,4 @@
-import { getTaskLists } from '@/services/lists/TaskListService';
+import { getInvitations, getTaskLists } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
 import { createTaskListFactory } from '@/app/task-lists/actions';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ export default async function TaskListMainView({ searchParams }: Props) {
   const user = session?.user as { id: string };
   const taskLists = getTaskLists(user.id);
   const createTaskListCallback = createTaskListFactory(user.id);
+  const invitations = getInvitations(user.id);
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
       <h2 className="text-center w-full text-xl pb-3">All your lists</h2>
@@ -36,6 +37,8 @@ export default async function TaskListMainView({ searchParams }: Props) {
           </Link>
         </div>
       </div>
+      <h2 className="text-center w-full text-xl pb-3">Invitations</h2>
+      {JSON.stringify(invitations)}
     </main>
   );
 }

@@ -18,3 +18,16 @@ type Permission = {
   role: Role;
   userId: string;
 };
+
+type Invitation = {
+  id: string;
+  taskListId: string;
+  role: Role;
+  userId: string;
+};
+
+type InvitationDto = {
+  taskListId: string;
+  role: Role;
+  userId: string;
+};

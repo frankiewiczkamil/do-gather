@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
+import taskListInvitiationFakeRepository from '@/services/lists/infra/TaskListInvitiationFakeRepository';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
@@ -34,4 +35,11 @@ export function deleteTaskList(id: string) {
 
 export function renameTaskList(id: string, name: string) {
   taskListRepository.updateTaskListName(id, name);
+}
+
+export function inviteUserToTaskList(userId: string, taskListId: string, isEditor: boolean = false) {
+  taskListInvitiationFakeRepository.saveInvitation({ userId, taskListId, role: isEditor ? 'editor' : 'viewer' });
+}
+export function getInvitations(userId: string) {
+  return taskListInvitiationFakeRepository.findInvitationByUserId(userId);
 }
