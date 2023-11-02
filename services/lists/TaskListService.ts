@@ -59,3 +59,19 @@ export function getInvitations(userId: string): PreviewInvitationDto[] {
     };
   });
 }
+
+export function acceptInvitation(invitationId: string, userId: string) {
+  const invitation = taskListInvitiationFakeRepository.findInvitationByUserId(userId).find((i) => i.id === invitationId);
+  if (!invitation) {
+    throw new Error(`Invitation ${invitationId} not found`);
+  }
+  if (invitation.userId !== userId) {
+    throw new Error(`Invitation ${invitationId} is not for user ${userId}`);
+  }
+  const taskList = taskListRepository.findTaskListById(invitation.taskListId);
+  if (!taskList.users.find((u) => u.userId === userId)) {
+    taskList.users.push({ role: invitation.role, userId: invitation.userId });
+  } else {
+    console.warn('user already in task list');
+  }
+}

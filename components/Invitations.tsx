@@ -1,3 +1,5 @@
+import { createAcceptInvitationAction } from '@/app/task-lists/actions';
+
 export type InvitationPreviewRow = {
   id: string;
   taskListName: string;
@@ -9,9 +11,10 @@ export type InvitationPreviewRow = {
 export type InvitationsProps = {
   elements: InvitationPreviewRow[];
   path: string;
+  createAcceptInvitationAction: (invitationId: string) => (formData: FormData) => void;
 };
 
-export function Invitations({ elements, path }: InvitationsProps) {
+export function Invitations({ elements, path, createAcceptInvitationAction }: InvitationsProps) {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="text-sm text-left text-gray-500 dark:text-gray-400 w-full">
@@ -32,9 +35,9 @@ export function Invitations({ elements, path }: InvitationsProps) {
             <th scope="col" className="px-6 py-3">
               Sent by
             </th>
-            {/*<th scope="col" className="px-6 py-3">*/}
-            {/*  Action*/}
-            {/*</th>*/}
+            <th scope="col" className="px-6 py-3">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>{elements.map(createToTaskListPreview(path))}</tbody>
@@ -43,7 +46,7 @@ export function Invitations({ elements, path }: InvitationsProps) {
   );
 }
 
-function InvitationRow({ taskListName, tasksNumber, role, ownerEmail, url, inviterEmail }: InvitationPreviewRow & { url: string; key: string }) {
+function InvitationRow({ id, taskListName, tasksNumber, role, ownerEmail, url, inviterEmail }: InvitationPreviewRow & { url: string; key: string }) {
   return (
     <tr className="bg-white dark:bg-gray-800">
       <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -53,11 +56,13 @@ function InvitationRow({ taskListName, tasksNumber, role, ownerEmail, url, invit
       <td className="px-6 py-4">{role}</td>
       <td className="px-6 py-4">{ownerEmail}</td>
       <td className="px-6 py-4">{inviterEmail}</td>
-      {/*<td className="px-6 py-4">*/}
-      {/*  <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href={acceptUrl}>*/}
-      {/*    accept*/}
-      {/*  </Link>*/}
-      {/*</td>*/}
+      <td className="px-6 py-4">
+        <form>
+          <button type={'submit'} formAction={createAcceptInvitationAction(id)} className="ont-medium text-blue-600 dark:text-blue-500 hover:underline">
+            accept
+          </button>
+        </form>
+      </td>
     </tr>
   );
 }

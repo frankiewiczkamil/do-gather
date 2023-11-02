@@ -1,6 +1,6 @@
 import { getInvitations, getTaskLists } from '@/services/lists/TaskListService';
 import { PATH } from '@/app/task-lists/common';
-import { createTaskListFactory } from '@/app/task-lists/actions';
+import { createAcceptInvitationAction, createTaskListFactory } from '@/app/task-lists/actions';
 import Link from 'next/link';
 import { AddNew } from '@/components/CreateTaskList';
 import { TaskListsTable } from '@/components/TaskListPreview';
@@ -42,7 +42,7 @@ export default async function TaskListMainView({ searchParams }: Props) {
       {invitations.length ? (
         <div className="max-w-screen-xl w-full mx-auto">
           <h2 className="text-center w-full text-xl pb-3">Invitations</h2>
-          <Invitations elements={invitations} path={PATH} />
+          <Invitations elements={invitations} path={PATH} createAcceptInvitationAction={createAcceptInvitationAction} />
         </div>
       ) : null}
     </main>

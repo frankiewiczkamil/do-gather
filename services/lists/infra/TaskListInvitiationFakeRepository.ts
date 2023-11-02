@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { TaskListInvitationCommand, TaskListInvitationQuery } from '@/services/lists/TaskListPorts';
 
 const taskListInvitations: Record<string, Invitation[]> = {
-  halinka: [{ taskListId: 'list-1', role: 'editor', userId: 'halinka', id: '1', inviterId: 'halinka' }],
+  halinka: [{ taskListId: 'list-2', role: 'editor', userId: 'halinka', id: '1', inviterId: 'zenek' }],
 };
 
 function findInvitationByUserId(userId: string) {
