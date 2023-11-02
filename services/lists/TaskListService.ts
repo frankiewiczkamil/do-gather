@@ -24,7 +24,12 @@ export function getTaskList(id: string) {
 }
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
-  const newTaskList = { ...createTaskListDto, id: randomUUID(), tasks: createTaskListDto.tasks || [] };
+  const newTaskList = {
+    ...createTaskListDto,
+    id: randomUUID(),
+    tasks: createTaskListDto.tasks || [],
+    users: [{ role: 'editor' as Role, userId: createTaskListDto.ownerId }],
+  };
   taskListRepository.saveTaskList(newTaskList);
   return newTaskList.id;
 }

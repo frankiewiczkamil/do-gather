@@ -10,7 +10,6 @@ type CreateTaskListDto = {
   name: string;
   tasks?: Task[];
   ownerId: string;
-  users: Permission[];
 };
 
 type Role = 'editor' | 'viewer';

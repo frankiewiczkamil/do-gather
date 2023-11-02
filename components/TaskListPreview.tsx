@@ -44,7 +44,7 @@ function TaskListRow({ name, tasks, url }: TaskList & { url: string; key: string
 }
 
 function NoTaskLists() {
-  return <div className="items-center border">No lists yet</div>;
+  return <div className="items-center">No lists yet</div>;
 }
 
 function createToTaskListPreview(path: string) {
