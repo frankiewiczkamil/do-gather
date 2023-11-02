@@ -37,9 +37,20 @@ export function renameTaskList(id: string, name: string) {
   taskListRepository.updateTaskListName(id, name);
 }
 
-export function inviteUserToTaskList(userId: string, taskListId: string, isEditor: boolean = false) {
-  taskListInvitiationFakeRepository.saveInvitation({ userId, taskListId, role: isEditor ? 'editor' : 'viewer' });
+export function inviteUserToTaskList(userId: string, taskListId: string, inviterId: string, isEditor: boolean = false) {
+  taskListInvitiationFakeRepository.saveInvitation({ userId, taskListId, role: isEditor ? 'editor' : 'viewer', inviterId });
 }
-export function getInvitations(userId: string) {
-  return taskListInvitiationFakeRepository.findInvitationByUserId(userId);
+export function getInvitations(userId: string): PreviewInvitationDto[] {
+  const invitations = taskListInvitiationFakeRepository.findInvitationByUserId(userId);
+  return invitations.map((invitation) => {
+    const taskList = taskListRepository.findTaskListById(invitation.taskListId);
+    return {
+      role: invitation.role,
+      tasksNumber: taskList.tasks.length,
+      taskListName: taskList.name,
+      ownerId: taskList.ownerId,
+      id: invitation.id,
+      inviterId: invitation.inviterId,
+    };
+  });
 }

@@ -24,10 +24,21 @@ type Invitation = {
   taskListId: string;
   role: Role;
   userId: string;
+  inviterId: string;
 };
 
-type InvitationDto = {
+type CreateInvitationDto = {
   taskListId: string;
   role: Role;
   userId: string;
+  inviterId: string;
+};
+
+type PreviewInvitationDto = {
+  id: string;
+  role: Role;
+  tasksNumber: number;
+  taskListName: string;
+  ownerId: string;
+  inviterId: string;
 };

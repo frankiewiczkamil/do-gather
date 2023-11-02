@@ -6,6 +6,8 @@ import { AddNew } from '@/components/CreateTaskList';
 import { TaskListsTable } from '@/components/TaskListPreview';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
+import { InvitationPreviewRow, Invitations } from '@/components/Invitations';
+import { getUserEmailById } from '@/services/users/UsersService';
 
 // it seems that for some reason revalidation from [id]/action doesn't work, thus we need to force dynamic for now
 export const dynamic = 'force-dynamic';
@@ -18,7 +20,7 @@ export default async function TaskListMainView({ searchParams }: Props) {
   const user = session?.user as { id: string };
   const taskLists = getTaskLists(user.id);
   const createTaskListCallback = createTaskListFactory(user.id);
-  const invitations = getInvitations(user.id);
+  const invitations = getInvitations(user.id).map(invitationPreviewDtoToInvitationProps);
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
       <h2 className="text-center w-full text-xl pb-3">All your lists</h2>
@@ -37,8 +39,24 @@ export default async function TaskListMainView({ searchParams }: Props) {
           </Link>
         </div>
       </div>
-      <h2 className="text-center w-full text-xl pb-3">Invitations</h2>
-      {JSON.stringify(invitations)}
+      {invitations.length ? (
+        <div className="max-w-screen-xl w-full mx-auto">
+          <h2 className="text-center w-full text-xl pb-3">Invitations</h2>
+          <Invitations elements={invitations} path={PATH} />
+        </div>
+      ) : null}
     </main>
   );
+}
+
+function invitationPreviewDtoToInvitationProps(invitation: PreviewInvitationDto): InvitationPreviewRow {
+  return {
+    id: invitation.id,
+    taskListName: invitation.taskListName,
+    tasksNumber: invitation.tasksNumber,
+    role: invitation.role,
+    ownerEmail: getUserEmailById(invitation.ownerId),
+    inviterEmail: getUserEmailById(invitation.inviterId),
+    // acceptUrl
+  };
 }

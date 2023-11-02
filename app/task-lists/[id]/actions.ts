@@ -3,6 +3,8 @@ import { PATH } from '@/app/task-lists/common';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getUserIdByEmail } from '@/services/users/UsersService';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export function createAddTaskToListAction(taskListId: string) {
   return async function addTaskToListAction(formData: FormData) {
@@ -49,7 +51,9 @@ export function createInviteUserToTaskListAction(taskListId: string) {
     'use server';
     const { userEmail, isEditor } = formDataToInviteUserToTaskListDto(formData);
     const userId = getUserIdByEmail(userEmail);
-    inviteUserToTaskList(userId, taskListId, isEditor);
+    const session = await getServerSession(authOptions);
+    const inviter = session?.user as { id: string };
+    inviteUserToTaskList(userId, taskListId, inviter.id, isEditor);
   };
 }
 

@@ -15,9 +15,7 @@ export type TaskListInvitationQuery = {
 };
 
 export type TaskListInvitationCommand = {
-  saveInvitation: (invitation: InvitationDto) => void;
+  saveInvitation: (invitation: CreateInvitationDto) => void;
 };
 
-export type UserIdByEmail = {
-  getUserIdByEmail: (email: string) => string;
-};
+export type GetUserEmailById = (id: string) => string;
