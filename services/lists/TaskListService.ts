@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
 import taskListInvitiationFakeRepository from '@/services/lists/infra/TaskListInvitiationFakeRepository';
+import type { CreateTaskListDto, PreviewInvitationDto, TaskList } from '@/services/lists/model/TaskList';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
@@ -28,7 +29,7 @@ export function addTaskList(createTaskListDto: CreateTaskListDto): string {
     ...createTaskListDto,
     id: randomUUID(),
     tasks: createTaskListDto.tasks || [],
-    users: [{ role: 'editor' as Role, userId: createTaskListDto.ownerId }],
+    users: [{ role: 'editor' as const, userId: createTaskListDto.ownerId }],
   };
   taskListRepository.saveTaskList(newTaskList);
   return newTaskList.id;
@@ -45,8 +46,8 @@ export function renameTaskList(id: string, name: string) {
 export function inviteUserToTaskList(userId: string, taskListId: string, inviterId: string, isEditor: boolean = false) {
   taskListInvitiationFakeRepository.saveInvitation({ userId, taskListId, role: isEditor ? 'editor' : 'viewer', inviterId });
 }
-export function getInvitations(userId: string): PreviewInvitationDto[] {
-  const invitations = taskListInvitiationFakeRepository.findInvitationByUserId(userId);
+export function getInvitations(userId: string, status = 'pending' as const): PreviewInvitationDto[] {
+  const invitations = taskListInvitiationFakeRepository.findInvitationByUserId(userId, status);
   return invitations.map((invitation) => {
     const taskList = taskListRepository.findTaskListById(invitation.taskListId);
     return {
@@ -69,6 +70,8 @@ export function acceptInvitation(invitationId: string, userId: string) {
     throw new Error(`Invitation ${invitationId} is not for user ${userId}`);
   }
   const taskList = taskListRepository.findTaskListById(invitation.taskListId);
+  taskListInvitiationFakeRepository.updateInvitationStatus(invitationId, 'accepted');
+
   if (!taskList.users.find((u) => u.userId === userId)) {
     taskList.users.push({ role: invitation.role, userId: invitation.userId });
   } else {

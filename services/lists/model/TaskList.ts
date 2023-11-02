@@ -1,4 +1,4 @@
-type TaskList = {
+export type TaskList = {
   id: string;
   name: string;
   tasks: Task[];
@@ -6,34 +6,36 @@ type TaskList = {
   users: Permission[];
 };
 
-type CreateTaskListDto = {
+export type CreateTaskListDto = {
   name: string;
   tasks?: Task[];
   ownerId: string;
 };
 
-type Role = 'editor' | 'viewer';
-type Permission = {
+export type Role = 'editor' | 'viewer';
+export type Permission = {
   role: Role;
   userId: string;
 };
 
-type Invitation = {
+export type InvitationStatus = 'pending' | 'accepted' | 'rejected';
+export type Invitation = {
   id: string;
   taskListId: string;
   role: Role;
   userId: string;
   inviterId: string;
+  status: InvitationStatus;
 };
 
-type CreateInvitationDto = {
+export type CreateInvitationDto = {
   taskListId: string;
   role: Role;
   userId: string;
   inviterId: string;
 };
 
-type PreviewInvitationDto = {
+export type PreviewInvitationDto = {
   id: string;
   role: Role;
   tasksNumber: number;

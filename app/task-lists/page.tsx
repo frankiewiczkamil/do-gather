@@ -8,6 +8,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 import { InvitationPreviewRow, Invitations } from '@/components/Invitations';
 import { getUserEmailById } from '@/services/users/UsersService';
+import { PreviewInvitationDto } from '@/services/lists/model/TaskList';
 
 // it seems that for some reason revalidation from [id]/action doesn't work, thus we need to force dynamic for now
 export const dynamic = 'force-dynamic';
