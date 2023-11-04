@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { TaskList } from '@/services/lists/model/TaskList';
 
 export function TaskListsTable(props: { taskLists: TaskList[]; path: string }) {
   return props.taskLists?.length > 0 ? <TableHeader {...props} /> : <NoTaskLists />;
