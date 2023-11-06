@@ -3,8 +3,10 @@ Exercise project for learning next v13. It is an app for collaborative task mana
 ---
 todo:
 - improve task-list view
-  - action buttons
+  - ~~action buttons~~
   - task list itself
+  - modal for delete confirmation
+  - modal for invite user status
 - extend task schema
   - consider progress percentage
   - consider comments for progress
