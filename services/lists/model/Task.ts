@@ -1,11 +1,11 @@
-type Task = {
+export type Task = {
   id: string;
   name: string;
   description: string;
   status: string;
 };
 
-type CreateTaskDto = {
+export type CreateTaskDto = {
   name: string;
   description: string;
 };
