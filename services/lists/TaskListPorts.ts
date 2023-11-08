@@ -1,4 +1,5 @@
 import { CreateInvitationDto, Invitation, InvitationStatus, TaskList } from '@/services/lists/model/TaskList';
+import { Task } from '@/services/lists/model/Task';
 
 export type TaskListCommand = {
   saveTaskList: (taskList: TaskList) => void;

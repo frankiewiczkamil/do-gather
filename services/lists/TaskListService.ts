@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
 import taskListInvitiationFakeRepository from '@/services/lists/infra/TaskListInvitiationFakeRepository';
 import type { CreateTaskListDto, PreviewInvitationDto, TaskList } from '@/services/lists/model/TaskList';
+import { CreateTaskDto, Task } from '@/services/lists/model/Task';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
