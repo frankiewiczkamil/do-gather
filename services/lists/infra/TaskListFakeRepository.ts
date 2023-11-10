@@ -1,6 +1,7 @@
 import { list1, list2 } from '@/data/fakeData';
 import { TaskListCommand, TaskListQuery } from '@/services/lists/TaskListPorts';
 import { TaskList } from '@/services/lists/model/TaskList';
+import { Task } from '@/services/lists/model/Task';
 
 const lists: TaskList[] = [list1, list2];
 function saveTask(taskListId: string, task: Task) {
