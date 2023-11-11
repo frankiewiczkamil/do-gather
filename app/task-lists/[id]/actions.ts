@@ -1,4 +1,5 @@
-import { addTask, deleteTaskList, inviteUserToTaskList, renameTaskList } from '@/services/lists/TaskListService';
+import { addTask, deleteTaskList, renameTaskList } from '@/services/lists/TaskListService';
+import { inviteUserToTaskList } from '@/services/invitation/InvitationService';
 import { PATH } from '@/app/task-lists/common';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';

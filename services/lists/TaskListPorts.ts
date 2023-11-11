@@ -1,4 +1,4 @@
-import { CreateInvitationDto, Invitation, InvitationStatus, TaskList } from '@/services/lists/model/TaskList';
+import { TaskList } from '@/services/lists/model/TaskList';
 import { Task } from '@/services/lists/model/Task';
 
 export type TaskListCommand = {
@@ -11,15 +11,6 @@ export type TaskListQuery = {
   findTaskListById: (id: string) => TaskList;
   findAllTaskLists: () => TaskList[];
   findAllAllowedTaskListsForUser: (ownerId: string) => TaskList[];
-};
-
-export type TaskListInvitationQuery = {
-  findInvitationByUserId: (userId: string, status?: InvitationStatus) => Invitation[];
-};
-
-export type TaskListInvitationCommand = {
-  saveInvitation: (invitation: CreateInvitationDto) => void;
-  updateInvitationStatus: (id: string, status: InvitationStatus) => void;
 };
 
 export type GetUserEmailById = (id: string) => string;

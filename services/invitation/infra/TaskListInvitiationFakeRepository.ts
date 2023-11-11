@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
-import { TaskListInvitationCommand, TaskListInvitationQuery } from '@/services/lists/TaskListPorts';
-import { CreateInvitationDto, Invitation } from '@/services/lists/model/TaskList';
+import { CreateInvitationDto, Invitation } from '@/services/invitation/Invitation';
+import { TaskListInvitationCommand, TaskListInvitationQuery } from '@/services/invitation/InvitationServicePorts';
 
 const taskListInvitations: Record<string, Invitation[]> = {
   halinka: [{ taskListId: 'list-2', role: 'editor', userId: 'halinka', id: '1', inviterId: 'zenek', status: 'pending' }],
