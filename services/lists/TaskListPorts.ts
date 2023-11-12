@@ -1,5 +1,5 @@
-import { TaskList } from '@/services/lists/model/TaskList';
-import { Task } from '@/services/lists/model/Task';
+import { TaskList } from '@/services/lists/TaskList';
+import { Task } from '@/services/lists/Task';
 
 export type TaskListCommand = {
   saveTaskList: (taskList: TaskList) => void;

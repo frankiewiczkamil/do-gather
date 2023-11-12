@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
-import type { CreateTaskListDto, TaskList } from '@/services/lists/model/TaskList';
-import { CreateTaskDto, Task } from '@/services/lists/model/Task';
+import type { CreateTaskListDto, TaskList } from '@/services/lists/TaskList';
+import { CreateTaskDto } from '@/services/lists/Task';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
@@ -12,9 +12,6 @@ export function addTask(taskListId: string, task: CreateTaskDto) {
     status: 'new',
   };
   taskListRepository.saveTask(taskListId, newTask);
-}
-export function getTasks(taskListId: string): Task[] {
-  return taskListRepository.findTaskListById(taskListId)?.tasks || [];
 }
 
 export function getTaskLists(ownerId: string): TaskList[] {

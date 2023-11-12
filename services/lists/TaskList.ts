@@ -1,4 +1,4 @@
-import { Task } from '@/services/lists/model/Task';
+import { Task } from '@/services/lists/Task';
 
 export type TaskList = {
   id: string;

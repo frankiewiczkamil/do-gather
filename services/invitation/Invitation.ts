@@ -1,4 +1,4 @@
-import { Role } from '@/services/lists/model/TaskList';
+import { Role } from '@/services/lists/TaskList';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'rejected';
 export type Invitation = {

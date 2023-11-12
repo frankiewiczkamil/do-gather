@@ -1,4 +1,4 @@
-import { Task } from '@/services/lists/model/Task';
+import { Task } from '@/services/lists/Task';
 
 export function TasksTable(props: { tasks: Task[] }) {
   return props.tasks?.length > 0 ? <TableHeader {...props} /> : <NoTask />;
