@@ -5,10 +5,10 @@ import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 
-export function createTaskListFactory(ownerId: string) {
+export function createTaskListFactory(authorId: string) {
   return async function createTaskList(formData: FormData) {
     'use server';
-    const taskList = { ...formDataToCreateTaskListDto(formData), ownerId };
+    const taskList = { ...formDataToCreateTaskListDto(formData), authorId };
     addTaskList(taskList);
     revalidatePath(PATH);
   };
