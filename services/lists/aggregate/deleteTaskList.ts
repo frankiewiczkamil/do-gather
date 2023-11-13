@@ -8,9 +8,13 @@ export type DeleteTaskListSucceeded = TaskListEventSucceeded & {
 };
 
 type DeleteTaskListEvent = DeleteTaskListFailed | DeleteTaskListSucceeded;
+export type DeleteTaskListCommand = {
+  taskListId: TaskListIdentifier;
+  authorId: UserIdentifier;
+};
 
 type GetTaskListById = (taskListId: TaskListIdentifier) => TaskList | undefined;
-export default function deleteTaskList(taskListId: TaskListIdentifier, getTaskListById: GetTaskListById, authorId: UserIdentifier): DeleteTaskListEvent {
+export default function deleteTaskList({ taskListId, authorId }: DeleteTaskListCommand, getTaskListById: GetTaskListById): DeleteTaskListEvent {
   // todo decide where and how user permissions are checked
   const taskList = getTaskListById(taskListId);
   if (!taskList) {

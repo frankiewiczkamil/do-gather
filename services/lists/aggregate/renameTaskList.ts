@@ -1,6 +1,6 @@
 import { TaskList, TaskListEventFailed, TaskListEventSucceeded, TaskListIdentifier, UserIdentifier } from '@/services/lists/TaskList';
 
-export type RenameTaskListDto = {
+export type RenameTaskListCommand = {
   newName: string;
   authorId: UserIdentifier;
   taskListId: TaskListIdentifier;
@@ -18,7 +18,7 @@ export type RenameTaskListSucceeded = TaskListEventSucceeded & {
 type RenameTaskListEvent = RenameTaskListFailed | RenameTaskListSucceeded;
 
 type GetTaskListById = (taskListId: TaskListIdentifier) => TaskList | undefined;
-export default function RenameTaskList({ taskListId, authorId, newName }: RenameTaskListDto, getTaskListById: GetTaskListById): RenameTaskListEvent {
+export default function RenameTaskList({ taskListId, authorId, newName }: RenameTaskListCommand, getTaskListById: GetTaskListById): RenameTaskListEvent {
   const result = {
     newName,
     timestamp: Date.now(),

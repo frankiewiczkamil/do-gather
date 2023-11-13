@@ -8,9 +8,10 @@ export type CreateTaskListDto = {
   tasks?: Task[];
   authorId: UserIdentifier;
 };
+type CreateTaskListCommand = CreateTaskListDto;
 type CreateTaskListFailed = TaskListEventFailed & {
   type: 'create-task-list-failed';
-  requestedTaskList: CreateTaskListDto;
+  requestedTaskList: CreateTaskListCommand;
 };
 export type CreateTaskListSucceeded = TaskListEventSucceeded & {
   type: 'create-task-list-succeeded';
@@ -22,7 +23,7 @@ export type CreateTaskListSucceeded = TaskListEventSucceeded & {
 };
 
 type CreateTaskListEvent = CreateTaskListFailed | CreateTaskListSucceeded;
-export default function createTaskList({ name, tasks, description, authorId }: CreateTaskListDto): CreateTaskListEvent {
+export default function createTaskList({ name, tasks, description, authorId }: CreateTaskListCommand): CreateTaskListEvent {
   // no business rules yet, so just return a succeeded event
   return {
     type: 'create-task-list-succeeded',
