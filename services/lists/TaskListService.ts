@@ -10,7 +10,7 @@ export function addTask(taskListId: string, task: CreateTaskDto) {
   const newTask = {
     ...task,
     id: randomUUID(),
-    status: 'new',
+    status: 'new' as const,
   };
   taskListRepository.saveTask(taskListId, newTask);
 }
@@ -32,6 +32,7 @@ export function addTaskList(createTaskListDto: CreateTaskListDto): string {
     creatorId: createTaskListDto.authorId,
     description: createTaskListDto.description || '',
     createdAt: Date.now(),
+    status: 'active' as const,
   };
 
   // createTaskList(newTaskList);

@@ -15,6 +15,7 @@ export type TaskListEventFailed = {
   error: string | Error;
 } & TaskListEventBase;
 
+export type TaskListEvent = TaskListEventSucceeded | TaskListEventFailed;
 export type TaskList = {
   id: string;
   name: string;
@@ -23,6 +24,8 @@ export type TaskList = {
   creatorId: UserIdentifier;
   createdAt: number;
   users: Permission[];
+  // description: string;
+  status: 'active' | 'archived' | 'deleted';
 };
 
 export type Role = 'editor' | 'viewer';

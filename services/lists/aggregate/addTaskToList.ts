@@ -5,16 +5,18 @@ type AddTaskToListFailed = TaskListEventFailed & {
   type: 'add-task-to-list-failed';
   task: AddTaskToListCommand;
 };
-type AddTaskToListSucceeded = TaskListEventSucceeded & {
+export type AddTaskToListSucceeded = TaskListEventSucceeded & {
   type: 'add-task-to-list-succeeded';
   task: AddTaskToListCommand;
 };
 
 type GetTaskById = (taskId: string) => Task | undefined;
 type AddTaskToListCommand = {
+  name: string;
   taskListId: string;
   authorId: UserIdentifier;
   id: string;
+  description?: string;
 };
 export function addTaskToList(addNewTaskCommand: AddTaskToListCommand, getTaskById: GetTaskById): AddTaskToListFailed | AddTaskToListSucceeded {
   const task = getTaskById(addNewTaskCommand.id);
