@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { applyTaskListEvent, createTaskListBase } from './TaskListReducer';
+import { applyTaskListEvent, createTaskListBase } from '@/services/lists/infra/TaskListReducer';
 
 describe('TaskListReducer', () => {
   describe('createTaskListBase', () => {
