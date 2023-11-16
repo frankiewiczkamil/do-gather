@@ -36,13 +36,15 @@ function applyRenameTaskListSucceeded(taskList: TaskListBase | TaskList, event: 
   return {
     ...taskList,
     name: event.newName,
+    updatedAt: event.timestamp,
   };
 }
 
-function applyDeleteTaskListSucceeded(taskList: TaskListBase | TaskList, _event: DeleteTaskListSucceeded) {
+function applyDeleteTaskListSucceeded(taskList: TaskListBase | TaskList, event: DeleteTaskListSucceeded) {
   return {
     ...taskList,
     status: 'deleted' as const,
+    updatedAt: event.timestamp,
   };
 }
 
@@ -51,6 +53,7 @@ function applyAddTaskToListSucceeded(taskList: TaskListBase | TaskList, event: A
   return {
     ...taskList,
     tasks: [...taskList.tasks, newTask],
+    updatedAt: event.timestamp,
   };
 }
 

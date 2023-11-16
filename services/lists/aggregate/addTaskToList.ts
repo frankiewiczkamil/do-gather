@@ -1,13 +1,18 @@
 import { Task } from '@/services/lists/Task';
 import { TaskListEventFailed, TaskListEventSucceeded, UserIdentifier } from '@/services/lists/TaskList';
 
-type AddTaskToListFailed = TaskListEventFailed & {
+type NewTaskDto = {
+  id: string;
+  name: string;
+  description?: string;
+};
+export type AddTaskToListFailed = TaskListEventFailed & {
   type: 'add-task-to-list-failed';
-  task: AddTaskToListCommand;
+  task: NewTaskDto;
 };
 export type AddTaskToListSucceeded = TaskListEventSucceeded & {
   type: 'add-task-to-list-succeeded';
-  task: AddTaskToListCommand;
+  task: NewTaskDto;
 };
 
 type GetTaskById = (taskId: string) => Task | undefined;

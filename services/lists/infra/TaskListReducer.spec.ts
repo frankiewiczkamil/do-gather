@@ -67,6 +67,7 @@ describe('TaskListReducer', () => {
         ownerId: taskList.ownerId,
         creatorId: taskList.creatorId,
         createdAt: 123,
+        updatedAt: event.timestamp,
       });
     });
     it('should add task to task-list on add-task-to-list-succeeded event', () => {
@@ -98,6 +99,7 @@ describe('TaskListReducer', () => {
         ownerId: taskList.ownerId,
         creatorId: taskList.creatorId,
         createdAt: taskList.createdAt,
+        updatedAt: event.timestamp,
       });
     });
 
@@ -132,6 +134,7 @@ describe('TaskListReducer', () => {
         ownerId: taskList.ownerId,
         creatorId: taskList.creatorId,
         createdAt: taskList.createdAt,
+        updatedAt: event.timestamp,
       });
     });
 
@@ -163,6 +166,7 @@ describe('TaskListReducer', () => {
         ownerId: taskList.ownerId,
         creatorId: taskList.creatorId,
         createdAt: taskList.createdAt,
+        updatedAt: deleteEvent.timestamp,
       });
     });
   });
