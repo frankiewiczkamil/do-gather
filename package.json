@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "jest",
     "lint": "next lint",
     "postinstall": "./create_env.sh"
   },
