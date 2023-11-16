@@ -1,17 +1,18 @@
-import { randomUUID } from 'crypto';
 import { TaskListEventFailed, TaskListEventSucceeded, UserIdentifier } from '@/services/lists/TaskList';
 import { Task } from '@/services/lists/Task';
 
 export type CreateTaskListDto = {
+  taskListId: string;
   name: string;
   description?: string;
   tasks?: Task[];
   authorId: UserIdentifier;
+  timestamp: number;
 };
-type CreateTaskListCommand = CreateTaskListDto;
+type CreateTaskListArgs = CreateTaskListDto;
 type CreateTaskListFailed = TaskListEventFailed & {
   type: 'create-task-list-failed';
-  requestedTaskList: CreateTaskListCommand;
+  requestedTaskList: CreateTaskListArgs;
 };
 export type CreateTaskListSucceeded = TaskListEventSucceeded & {
   type: 'create-task-list-succeeded';
@@ -23,12 +24,12 @@ export type CreateTaskListSucceeded = TaskListEventSucceeded & {
 };
 
 type CreateTaskListEvent = CreateTaskListFailed | CreateTaskListSucceeded;
-export default function createTaskList({ name, tasks, description, authorId }: CreateTaskListCommand): CreateTaskListEvent {
+export default function createTaskList({ name, tasks, description, authorId, taskListId, timestamp }: CreateTaskListArgs): CreateTaskListEvent {
   // no business rules yet, so just return a succeeded event
   return {
     type: 'create-task-list-succeeded',
-    taskListId: randomUUID(),
-    timestamp: Date.now(),
+    taskListId,
+    timestamp,
     authorId,
     status: 'succeeded',
     createdTaskList: {

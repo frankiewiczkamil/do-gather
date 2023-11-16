@@ -8,20 +8,19 @@ export type DeleteTaskListSucceeded = TaskListEventSucceeded & {
 };
 
 type DeleteTaskListEvent = DeleteTaskListFailed | DeleteTaskListSucceeded;
-export type DeleteTaskListCommand = {
+export type DeleteTaskListArgs = {
   taskListId: TaskListIdentifier;
   authorId: UserIdentifier;
+  timestamp: number;
 };
 
-type GetTaskListById = (taskListId: TaskListIdentifier) => TaskList | undefined;
-export default function deleteTaskList({ taskListId, authorId }: DeleteTaskListCommand, getTaskListById: GetTaskListById): DeleteTaskListEvent {
+export default function deleteTaskList(taskList: TaskList, { taskListId, authorId, timestamp }: DeleteTaskListArgs): DeleteTaskListEvent {
   // todo decide where and how user permissions are checked
-  const taskList = getTaskListById(taskListId);
   if (!taskList) {
     return {
       type: 'delete-task-list-failed',
       taskListId,
-      timestamp: Date.now(),
+      timestamp,
       authorId,
       status: 'failed',
       error: `Task list with id ${taskListId} not found`,
@@ -30,7 +29,7 @@ export default function deleteTaskList({ taskListId, authorId }: DeleteTaskListC
     return {
       type: 'delete-task-list-succeeded',
       taskListId,
-      timestamp: Date.now(),
+      timestamp,
       authorId,
       status: 'succeeded',
     };

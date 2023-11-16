@@ -1,5 +1,4 @@
-import { Task } from '@/services/lists/Task';
-import { TaskListEventFailed, TaskListEventSucceeded, UserIdentifier } from '@/services/lists/TaskList';
+import { TaskList, TaskListEventFailed, TaskListEventSucceeded, UserIdentifier } from '@/services/lists/TaskList';
 
 type NewTaskDto = {
   id: string;
@@ -15,28 +14,28 @@ export type AddTaskToListSucceeded = TaskListEventSucceeded & {
   task: NewTaskDto;
 };
 
-type GetTaskById = (taskId: string) => Task | undefined;
-type AddTaskToListCommand = {
+type AddTaskToListCommandArgs = {
   name: string;
   taskListId: string;
   authorId: UserIdentifier;
   id: string;
   description?: string;
+  timestamp: number;
 };
-export function addTaskToList(addNewTaskCommand: AddTaskToListCommand, getTaskById: GetTaskById): AddTaskToListFailed | AddTaskToListSucceeded {
-  const task = getTaskById(addNewTaskCommand.id);
+export function addTaskToList(taskList: TaskList, addNewTaskCommandArgs: AddTaskToListCommandArgs): AddTaskToListFailed | AddTaskToListSucceeded {
+  const task = taskList.tasks.find((t) => t.id === addNewTaskCommandArgs.id);
   const result = {
-    timestamp: Date.now(),
-    authorId: addNewTaskCommand.authorId,
-    taskListId: addNewTaskCommand.taskListId,
-    task: addNewTaskCommand,
+    timestamp: addNewTaskCommandArgs.timestamp,
+    authorId: addNewTaskCommandArgs.authorId,
+    taskListId: addNewTaskCommandArgs.taskListId,
+    task: addNewTaskCommandArgs,
   };
   if (task) {
     return {
       ...result,
       type: 'add-task-to-list-failed',
       status: 'failed',
-      error: `Task with id ${addNewTaskCommand.id} already exists`,
+      error: `Task with id ${addNewTaskCommandArgs.id} already exists`,
     };
   } else {
     return {
