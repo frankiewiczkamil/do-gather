@@ -1,8 +1,8 @@
 import { describe, it } from '@jest/globals';
-import { selectTaskList } from '@/services/lists/infra/TaskListEventStore';
 import { RenameTaskListSucceeded } from '@/services/lists/aggregate/renameTaskList';
 import { AddTaskToListFailed, AddTaskToListSucceeded } from '@/services/lists/aggregate/addTaskToList';
 import { CreateTaskListSucceeded } from '@/services/lists/aggregate/createTaskList';
+import { calculateTaskListState } from '@/services/lists/infra/store/TaskListStateCalculator';
 
 const taskListId = 'my-id';
 const createTaskListSucceededEvent: CreateTaskListSucceeded = {
@@ -89,7 +89,7 @@ describe('TaskListEventStore', () => {
 
   describe('selectTaskList', () => {
     it('should build aggregate from given events', () => {
-      const result = selectTaskList(events, taskListId);
+      const result = calculateTaskListState(events, taskListId);
       expect(result).toStrictEqual({
         id: taskListId,
         users: [],

@@ -19,8 +19,6 @@ export function applyTaskListEvent(taskList: TaskList | TaskListBase, event: Tas
       return taskList;
   }
 }
-export const isApplicableEventFactory = (taskListId: TaskListIdentifier) => (event: TaskListEvent | TaskListSuccessEvent) =>
-  event.taskListId === taskListId && event.status === 'succeeded';
 
 function applyCreateTaskList(taskListPartial: TaskListBase | TaskList, taskCreatedEvent: CreateTaskListSucceeded) {
   return {
