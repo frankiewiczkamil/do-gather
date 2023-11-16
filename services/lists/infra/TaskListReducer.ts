@@ -29,6 +29,7 @@ function applyCreateTaskList(taskListPartial: TaskListBase | TaskList, taskCreat
     ownerId: taskCreatedEvent.authorId,
     creatorId: taskCreatedEvent.authorId,
     createdAt: taskCreatedEvent.timestamp,
+    updatedAt: taskCreatedEvent.timestamp,
   };
 }
 function applyRenameTaskListSucceeded(taskList: TaskListBase | TaskList, event: RenameTaskListSucceeded) {

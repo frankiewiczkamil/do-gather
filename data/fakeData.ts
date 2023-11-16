@@ -22,7 +22,8 @@ export const list1: TaskList = {
     { role: 'editor', userId: 'zenek' },
     { role: 'viewer', userId: 'halinka' },
   ],
-  createdAt: Date.now(),
+  createdAt: 1700029000,
+  updatedAt: 1700129000,
   creatorId: 'zenek',
   status: 'active',
 };
@@ -32,7 +33,8 @@ export const list2: TaskList = {
   tasks: tasks2,
   ownerId: 'zenek',
   creatorId: 'zenek',
-  createdAt: Date.now(),
+  createdAt: 1700025000,
+  updatedAt: 1700126000,
   status: 'active',
   users: [{ role: 'editor', userId: 'zenek' }],
 };

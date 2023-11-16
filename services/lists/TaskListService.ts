@@ -23,6 +23,7 @@ export function getTaskList(id: string) {
 }
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
+  const t = Date.now();
   const newTaskList = {
     ...createTaskListDto,
     id: randomUUID(),
@@ -31,7 +32,8 @@ export function addTaskList(createTaskListDto: CreateTaskListDto): string {
     ownerId: createTaskListDto.authorId,
     creatorId: createTaskListDto.authorId,
     description: createTaskListDto.description || '',
-    createdAt: Date.now(),
+    createdAt: t,
+    updatedAt: t,
     status: 'active' as const,
   };
 

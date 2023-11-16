@@ -23,6 +23,7 @@ export type TaskList = {
   ownerId: UserIdentifier;
   creatorId: UserIdentifier;
   createdAt: number;
+  updatedAt: number;
   users: Permission[];
   // description: string;
   status: 'active' | 'archived' | 'deleted';
