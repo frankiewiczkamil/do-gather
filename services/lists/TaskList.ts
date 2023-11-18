@@ -25,6 +25,7 @@ export type TaskList = {
   createdAt: number;
   updatedAt: number;
   users: Permission[];
+  invitations: Invitation[];
   // description: string;
   status: 'active' | 'archived' | 'deleted';
 };
@@ -33,4 +34,9 @@ export type Role = 'editor' | 'viewer';
 export type Permission = {
   role: Role;
   userId: UserIdentifier;
+};
+export type Invitation = {
+  invitationId: string;
+  inviteeId: UserIdentifier;
+  inviteeRole: Role;
 };

@@ -3,6 +3,7 @@ import { RenameTaskListSucceeded } from '@/services/lists/aggregate/renameTaskLi
 import { AddTaskToListFailed, AddTaskToListSucceeded } from '@/services/lists/aggregate/addTaskToList';
 import { CreateTaskListSucceeded } from '@/services/lists/aggregate/createTaskList';
 import { calculateTaskListState } from '@/services/lists/infra/store/TaskListStateCalculator';
+import { AcceptInvitationToTaskListSucceeded } from '@/services/lists/aggregate/acceptInvitation';
 
 const taskListId = 'my-id';
 const createTaskListSucceededEvent: CreateTaskListSucceeded = {
@@ -76,6 +77,35 @@ const addTaskToListFailed: AddTaskToListFailed = {
     description: 'task-description2',
   },
 };
+const inviteEvent1 = {
+  type: 'invite-user-to-task-list-succeeded',
+  taskListId: 'my-id',
+  timestamp: 6,
+  authorId: 'that-other-guy',
+  status: 'succeeded',
+  inviteeId: 'invitee-id1',
+  inviteeRole: 'viewer',
+  invitationId: 'invitation-id1',
+} as const;
+const inviteEvent2 = {
+  type: 'invite-user-to-task-list-succeeded',
+  taskListId: 'my-id',
+  timestamp: 7,
+  authorId: 'that-other-guy',
+  status: 'succeeded',
+  inviteeId: 'invitee-id2',
+  inviteeRole: 'editor',
+  invitationId: 'invitation-id2',
+} as const;
+
+const acceptInvitationEvent: AcceptInvitationToTaskListSucceeded = {
+  type: 'accept-invitation-to-task-list-succeeded',
+  taskListId: 'my-id',
+  timestamp: 8,
+  authorId: 'invitee-id',
+  status: 'succeeded',
+  invitationId: 'invitation-id1',
+} as const;
 
 describe('TaskListEventStore', () => {
   const events = [
@@ -85,6 +115,9 @@ describe('TaskListEventStore', () => {
     addTaskToListSucceededEventOtherId,
     addAnotherTaskToListSucceededEvent,
     addTaskToListFailed,
+    inviteEvent1,
+    inviteEvent2,
+    acceptInvitationEvent,
   ];
 
   describe('selectTaskList', () => {
@@ -92,7 +125,8 @@ describe('TaskListEventStore', () => {
       const result = calculateTaskListState(events, taskListId);
       expect(result).toStrictEqual({
         id: taskListId,
-        users: [],
+        users: [{ userId: 'invitee-id1', role: 'viewer' }],
+        invitations: [{ inviteeRole: 'editor', inviteeId: 'invitee-id2', invitationId: inviteEvent2.invitationId }],
         tasks: [
           {
             id: addTaskToListSucceededEvent.task.id,
@@ -112,7 +146,7 @@ describe('TaskListEventStore', () => {
         ownerId: createTaskListSucceededEvent.authorId,
         creatorId: createTaskListSucceededEvent.authorId,
         createdAt: createTaskListSucceededEvent.timestamp,
-        updatedAt: addAnotherTaskToListSucceededEvent.timestamp,
+        updatedAt: acceptInvitationEvent.timestamp,
       });
     });
   });

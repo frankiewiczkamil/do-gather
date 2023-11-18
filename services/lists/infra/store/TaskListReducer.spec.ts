@@ -1,10 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 import { applyTaskListEvent, createTaskListBase } from '@/services/lists/infra/store/TaskListReducer';
+import { AcceptInvitationToTaskListSucceeded } from '@/services/lists/aggregate/acceptInvitation';
+import { Invitation } from '@/services/lists/TaskList';
 
 describe('TaskListReducer', () => {
   describe('createTaskListBase', () => {
     it('should create a task-list object with initial values', () => {
-      expect(createTaskListBase('my-id')).toStrictEqual({ id: 'my-id', users: [], tasks: [], status: 'active' });
+      expect(createTaskListBase('my-id')).toStrictEqual({ id: 'my-id', users: [], tasks: [], status: 'active', invitations: [] });
     });
   });
   describe('applyTaskListEvent', () => {
@@ -27,6 +29,7 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: 'my-id',
         users: [],
+        invitations: [],
         tasks: [],
         status: 'active',
         name: event.createdTaskList.name,
@@ -40,6 +43,7 @@ describe('TaskListReducer', () => {
       const taskList = {
         id: 'my-id',
         users: [],
+        invitations: [],
         tasks: [],
         status: 'active' as const,
         name: 'my-name',
@@ -61,6 +65,7 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [],
+        invitations: [],
         tasks: [],
         status: 'active',
         name: event.newName,
@@ -74,6 +79,7 @@ describe('TaskListReducer', () => {
       const taskList = {
         id: 'my-id',
         users: [],
+        invitations: [],
         tasks: [],
         status: 'active' as const,
         name: 'my-name',
@@ -93,6 +99,7 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [],
+        invitations: [],
         tasks: [{ id: event.task.id, name: event.task.name, status: 'new', description: event.task.description }],
         status: 'active',
         name: taskList.name,
@@ -109,6 +116,7 @@ describe('TaskListReducer', () => {
       const taskList = {
         id: 'my-id',
         users: [],
+        invitations: [],
         tasks: [existingTask],
         status: 'active' as const,
         name: 'my-name',
@@ -128,6 +136,7 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [],
+        invitations: [],
         tasks: [existingTask, newTask],
         status: 'active',
         name: taskList.name,
@@ -142,6 +151,7 @@ describe('TaskListReducer', () => {
       const taskList = {
         id: 'my-id',
         users: [],
+        invitations: [],
         tasks: [],
         status: 'active' as const,
         name: 'my-name',
@@ -160,6 +170,7 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [],
+        invitations: [],
         tasks: [],
         status: 'deleted',
         name: taskList.name,
@@ -167,6 +178,79 @@ describe('TaskListReducer', () => {
         creatorId: taskList.creatorId,
         createdAt: taskList.createdAt,
         updatedAt: deleteEvent.timestamp,
+      });
+    });
+
+    it('should add invitee to task-list on invite-user-to-task-list-succeeded event', () => {
+      const taskList = {
+        id: 'my-id',
+        users: [],
+        invitations: [],
+        tasks: [],
+        status: 'active' as const,
+        name: 'my-name',
+        ownerId: 'owner-id',
+        creatorId: 'creator-id',
+        createdAt: 123,
+      };
+      const inviteEvent = {
+        type: 'invite-user-to-task-list-succeeded',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'that-other-guy',
+        status: 'succeeded',
+        inviteeId: 'invitee-id',
+        inviteeRole: 'editor',
+        invitationId: 'invitation-id',
+      } as const;
+      const result = applyTaskListEvent(taskList, inviteEvent);
+      expect(result).toStrictEqual({
+        id: taskList.id,
+        users: [],
+        invitations: [{ inviteeRole: 'editor', inviteeId: 'invitee-id', invitationId: inviteEvent.invitationId }],
+        tasks: [],
+        status: 'active',
+        name: taskList.name,
+        ownerId: taskList.ownerId,
+        creatorId: taskList.creatorId,
+        createdAt: taskList.createdAt,
+        updatedAt: inviteEvent.timestamp,
+      });
+    });
+
+    it('should accept invitation to task-list on accept-invitation-to-task-list-succeeded event', () => {
+      const invitation: Invitation = { inviteeRole: 'editor', inviteeId: 'invitee-id', invitationId: 'invitation-id' };
+      const taskList = {
+        id: 'my-id',
+        users: [],
+        invitations: [invitation],
+        tasks: [],
+        status: 'active' as const,
+        name: 'my-name',
+        ownerId: 'owner-id',
+        creatorId: 'creator-id',
+        createdAt: 123,
+      };
+      const acceptInvitationEvent: AcceptInvitationToTaskListSucceeded = {
+        type: 'accept-invitation-to-task-list-succeeded',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'invitee-id',
+        status: 'succeeded',
+        invitationId: 'invitation-id',
+      } as const;
+      const result = applyTaskListEvent(taskList, acceptInvitationEvent);
+      expect(result).toStrictEqual({
+        id: taskList.id,
+        users: [{ role: 'editor', userId: 'invitee-id' }],
+        invitations: [],
+        tasks: [],
+        status: 'active',
+        name: taskList.name,
+        ownerId: taskList.ownerId,
+        creatorId: taskList.creatorId,
+        createdAt: taskList.createdAt,
+        updatedAt: acceptInvitationEvent.timestamp,
       });
     });
   });

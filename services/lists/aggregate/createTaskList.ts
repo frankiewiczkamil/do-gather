@@ -2,14 +2,12 @@ import { TaskListEventFailed, TaskListEventSucceeded, UserIdentifier } from '@/s
 import { Task } from '@/services/lists/Task';
 
 export type CreateTaskListDto = {
-  taskListId: string;
   name: string;
   description?: string;
   tasks?: Task[];
   authorId: UserIdentifier;
-  timestamp: number;
 };
-type CreateTaskListArgs = CreateTaskListDto;
+type CreateTaskListArgs = CreateTaskListDto & { taskListId: string; timestamp: number };
 type CreateTaskListFailed = TaskListEventFailed & {
   type: 'create-task-list-failed';
   requestedTaskList: CreateTaskListArgs;

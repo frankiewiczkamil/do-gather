@@ -1,9 +1,11 @@
-import { Permission, TaskList, TaskListEvent, TaskListIdentifier } from '@/services/lists/TaskList';
+import { Invitation, Permission, TaskList, TaskListEvent, TaskListIdentifier } from '@/services/lists/TaskList';
 import { CreateTaskListSucceeded } from '@/services/lists/aggregate/createTaskList';
 import { RenameTaskListSucceeded } from '@/services/lists/aggregate/renameTaskList';
 import { DeleteTaskListSucceeded } from '@/services/lists/aggregate/deleteTaskList';
 import { AddTaskToListSucceeded } from '@/services/lists/aggregate/addTaskToList';
 import { Task } from '@/services/lists/Task';
+import { InviteUserToTheTaskListSucceeded } from '@/services/lists/aggregate/inviteUser';
+import { AcceptInvitationToTaskListArgs, AcceptInvitationToTaskListSucceeded } from '@/services/lists/aggregate/acceptInvitation';
 
 export function applyTaskListEvent(taskList: TaskList | TaskListBase, event: TaskListEvent | TaskListSuccessEvent) {
   switch (event.type) {
@@ -15,6 +17,10 @@ export function applyTaskListEvent(taskList: TaskList | TaskListBase, event: Tas
       return applyDeleteTaskListSucceeded(taskList, event as DeleteTaskListSucceeded);
     case 'add-task-to-list-succeeded':
       return applyAddTaskToListSucceeded(taskList, event as AddTaskToListSucceeded);
+    case 'invite-user-to-task-list-succeeded':
+      return applyInviteUserToTaskListSucceeded(taskList, event as InviteUserToTheTaskListSucceeded);
+    case 'accept-invitation-to-task-list-succeeded':
+      return applyAcceptInvitationToTaskListSucceeded(taskList, event as AcceptInvitationToTaskListSucceeded);
     default:
       return taskList;
   }
@@ -55,14 +61,44 @@ function applyAddTaskToListSucceeded(taskList: TaskListBase | TaskList, event: A
   };
 }
 
-type TaskListBase = {
+function applyInviteUserToTaskListSucceeded(taskList: TaskListBase | TaskList, event: InviteUserToTheTaskListSucceeded) {
+  return {
+    ...taskList,
+    invitations: [...taskList.invitations, { inviteeRole: event.inviteeRole, inviteeId: event.inviteeId, invitationId: event.invitationId }],
+    updatedAt: event.timestamp,
+  };
+}
+
+function applyAcceptInvitationToTaskListSucceeded(taskList: TaskListBase | TaskList, event: AcceptInvitationToTaskListArgs) {
+  const invitation = taskList.invitations.find((invitation) => invitation.invitationId === event.invitationId);
+  if (!invitation) {
+    console.error(`could not apply accept invitation to task list succeeded event, invitation ${event.invitationId} not found`);
+    return taskList;
+  } else {
+    return {
+      ...taskList,
+      invitations: taskList.invitations.filter((invitation) => invitation.invitationId !== event.invitationId),
+      users: [...taskList.users, { role: invitation.inviteeRole, userId: invitation.inviteeId }],
+      updatedAt: event.timestamp,
+    };
+  }
+}
+
+export type TaskListBase = {
   id: TaskListIdentifier;
   users: Permission[];
+  invitations: Invitation[];
   tasks: Task[];
   status: 'active' | 'archived' | 'deleted';
 };
-export type TaskListSuccessEvent = CreateTaskListSucceeded | RenameTaskListSucceeded | AddTaskToListSucceeded | DeleteTaskListSucceeded;
+export type TaskListSuccessEvent =
+  | CreateTaskListSucceeded
+  | RenameTaskListSucceeded
+  | AddTaskToListSucceeded
+  | DeleteTaskListSucceeded
+  | InviteUserToTheTaskListSucceeded
+  | AcceptInvitationToTaskListSucceeded;
 
 export function createTaskListBase(taskListId: TaskListIdentifier) {
-  return { id: taskListId, users: [], tasks: [], status: 'active' as const };
+  return { id: taskListId, users: [], tasks: [], status: 'active' as const, invitations: [] };
 }
