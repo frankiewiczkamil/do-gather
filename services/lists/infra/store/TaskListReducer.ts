@@ -7,20 +7,20 @@ import { Task } from '@/services/lists/Task';
 import { InviteUserToTheTaskListSucceeded } from '@/services/lists/aggregate/inviteUser';
 import { AcceptInvitationToTaskListArgs, AcceptInvitationToTaskListSucceeded } from '@/services/lists/aggregate/acceptInvitation';
 
-export function applyTaskListEvent(taskList: TaskList | TaskListBase, event: TaskListEvent | TaskListSuccessEvent) {
+export function applyTaskListEvent(taskList: TaskListBase | TaskList, event: TaskListEvent | TaskListSuccessEvent) {
   switch (event.type) {
     case 'create-task-list-succeeded':
       return applyCreateTaskList(taskList, event as CreateTaskListSucceeded);
     case 'rename-task-list-succeeded':
-      return applyRenameTaskListSucceeded(taskList, event as RenameTaskListSucceeded);
+      return applyRenameTaskListSucceeded(taskList as TaskList, event as RenameTaskListSucceeded);
     case 'delete-task-list-succeeded':
-      return applyDeleteTaskListSucceeded(taskList, event as DeleteTaskListSucceeded);
+      return applyDeleteTaskListSucceeded(taskList as TaskList, event as DeleteTaskListSucceeded);
     case 'add-task-to-list-succeeded':
-      return applyAddTaskToListSucceeded(taskList, event as AddTaskToListSucceeded);
+      return applyAddTaskToListSucceeded(taskList as TaskList, event as AddTaskToListSucceeded);
     case 'invite-user-to-task-list-succeeded':
-      return applyInviteUserToTaskListSucceeded(taskList, event as InviteUserToTheTaskListSucceeded);
+      return applyInviteUserToTaskListSucceeded(taskList as TaskList, event as InviteUserToTheTaskListSucceeded);
     case 'accept-invitation-to-task-list-succeeded':
-      return applyAcceptInvitationToTaskListSucceeded(taskList, event as AcceptInvitationToTaskListSucceeded);
+      return applyAcceptInvitationToTaskListSucceeded(taskList as TaskList, event as AcceptInvitationToTaskListSucceeded);
     default:
       return taskList;
   }
@@ -36,7 +36,7 @@ function applyCreateTaskList(taskListPartial: TaskListBase | TaskList, taskCreat
     updatedAt: taskCreatedEvent.timestamp,
   };
 }
-function applyRenameTaskListSucceeded(taskList: TaskListBase | TaskList, event: RenameTaskListSucceeded) {
+function applyRenameTaskListSucceeded(taskList: TaskList, event: RenameTaskListSucceeded) {
   return {
     ...taskList,
     name: event.newName,
@@ -44,7 +44,7 @@ function applyRenameTaskListSucceeded(taskList: TaskListBase | TaskList, event: 
   };
 }
 
-function applyDeleteTaskListSucceeded(taskList: TaskListBase | TaskList, event: DeleteTaskListSucceeded) {
+function applyDeleteTaskListSucceeded(taskList: TaskList, event: DeleteTaskListSucceeded) {
   return {
     ...taskList,
     status: 'deleted' as const,
@@ -52,7 +52,7 @@ function applyDeleteTaskListSucceeded(taskList: TaskListBase | TaskList, event: 
   };
 }
 
-function applyAddTaskToListSucceeded(taskList: TaskListBase | TaskList, event: AddTaskToListSucceeded) {
+function applyAddTaskToListSucceeded(taskList: TaskList, event: AddTaskToListSucceeded) {
   const newTask = { id: event.task.id, name: event.task.name, status: 'new' as const, description: event.task.description };
   return {
     ...taskList,
@@ -61,7 +61,7 @@ function applyAddTaskToListSucceeded(taskList: TaskListBase | TaskList, event: A
   };
 }
 
-function applyInviteUserToTaskListSucceeded(taskList: TaskListBase | TaskList, event: InviteUserToTheTaskListSucceeded) {
+function applyInviteUserToTaskListSucceeded(taskList: TaskList, event: InviteUserToTheTaskListSucceeded) {
   return {
     ...taskList,
     invitations: [...taskList.invitations, { inviteeRole: event.inviteeRole, inviteeId: event.inviteeId, invitationId: event.invitationId }],
@@ -69,7 +69,7 @@ function applyInviteUserToTaskListSucceeded(taskList: TaskListBase | TaskList, e
   };
 }
 
-function applyAcceptInvitationToTaskListSucceeded(taskList: TaskListBase | TaskList, event: AcceptInvitationToTaskListArgs) {
+function applyAcceptInvitationToTaskListSucceeded(taskList: TaskList, event: AcceptInvitationToTaskListArgs) {
   const invitation = taskList.invitations.find((invitation) => invitation.invitationId === event.invitationId);
   if (!invitation) {
     console.error(`could not apply accept invitation to task list succeeded event, invitation ${event.invitationId} not found`);
