@@ -47,7 +47,6 @@ export default {
   saveTask,
   findTaskListById,
   findAllAllowedTaskListsForUser,
-  findAllTaskLists,
   deleteTaskList,
   updateTaskListName,
 } as TaskListCommand & TaskListQuery;

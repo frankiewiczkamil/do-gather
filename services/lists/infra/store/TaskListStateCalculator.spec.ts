@@ -125,7 +125,10 @@ describe('TaskListEventStore', () => {
       const result = calculateTaskListState(events, taskListId);
       expect(result).toStrictEqual({
         id: taskListId,
-        users: [{ userId: 'invitee-id1', role: 'viewer' }],
+        users: [
+          { role: 'editor', userId: 'author-id' },
+          { userId: 'invitee-id1', role: 'viewer' },
+        ],
         invitations: [{ inviteeRole: 'editor', inviteeId: 'invitee-id2', invitationId: inviteEvent2.invitationId }],
         tasks: [
           {

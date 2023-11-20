@@ -28,12 +28,12 @@ describe('TaskListReducer', () => {
       const result = applyTaskListEvent(initialTaskList, event);
       expect(result).toStrictEqual({
         id: 'my-id',
-        users: [],
         invitations: [],
         tasks: [],
         status: 'active',
         name: event.createdTaskList.name,
         ownerId: event.authorId,
+        users: [{ role: 'editor', userId: event.authorId }],
         creatorId: event.authorId,
         createdAt: event.timestamp,
         updatedAt: event.timestamp,

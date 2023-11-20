@@ -32,9 +32,10 @@ function applyCreateTaskList(taskListPartial: TaskListBase | TaskList, taskCreat
     name: taskCreatedEvent.createdTaskList.name,
     ownerId: taskCreatedEvent.authorId,
     creatorId: taskCreatedEvent.authorId,
+    users: [{ role: 'editor', userId: taskCreatedEvent.authorId }],
     createdAt: taskCreatedEvent.timestamp,
     updatedAt: taskCreatedEvent.timestamp,
-  };
+  } as TaskList;
 }
 function applyRenameTaskListSucceeded(taskList: TaskList, event: RenameTaskListSucceeded) {
   return {
