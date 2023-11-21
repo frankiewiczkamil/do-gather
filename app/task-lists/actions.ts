@@ -1,6 +1,6 @@
 import { PATH } from '@/app/task-lists/common';
 import { addTaskList } from '@/services/lists/TaskListService';
-import { acceptInvitation } from '@/services/invitation/InvitationService';
+import { acceptInvitation } from '@/services/lists/invitation/InvitationService';
 import { revalidatePath } from 'next/cache';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';

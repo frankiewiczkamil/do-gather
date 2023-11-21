@@ -129,7 +129,10 @@ describe('TaskListEventStore', () => {
           { role: 'editor', userId: 'author-id' },
           { userId: 'invitee-id1', role: 'viewer' },
         ],
-        invitations: [{ inviteeRole: 'editor', inviteeId: 'invitee-id2', invitationId: inviteEvent2.invitationId }],
+        invitations: [
+          { inviteeRole: 'viewer', inviteeId: 'invitee-id1', invitationId: inviteEvent1.invitationId, inviterId: inviteEvent1.authorId, status: 'accepted' },
+          { inviteeRole: 'editor', inviteeId: 'invitee-id2', invitationId: inviteEvent2.invitationId, inviterId: inviteEvent2.authorId, status: 'pending' },
+        ],
         tasks: [
           {
             id: addTaskToListSucceededEvent.task.id,

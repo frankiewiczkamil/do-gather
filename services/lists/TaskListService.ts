@@ -1,53 +1,69 @@
 import { randomUUID } from 'crypto';
-import taskListRepository from '@/services/lists/infra/TaskListFakeRepository';
+import taskListRepository from '@/services/lists/infra/TaskListReadModel';
 import type { TaskList } from '@/services/lists/TaskList';
 import { CreateTaskDto } from '@/services/lists/Task';
-import { CreateTaskListDto } from '@/services/lists/aggregate/createTaskList';
+import createTaskList, { CreateTaskListDto } from '@/services/lists/aggregate/createTaskList';
+import { publishTaskListEvent, selectTaskList } from '@/services/lists/infra/store/TaskListEventStore';
+import { addTaskToList } from '@/services/lists/aggregate/addTaskToList';
+import renameGivenTaskList from '@/services/lists/aggregate/renameTaskList';
+import removeTaskList from '@/services/lists/aggregate/deleteTaskList';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
 export function addTask(taskListId: string, task: CreateTaskDto) {
   const taskId = randomUUID();
-  const newTask = {
-    ...task,
+  const commandPayload = {
+    taskListId,
+    authorId: 'todo',
+    name: task.name,
     id: taskId,
-    status: 'new' as const,
+    description: task.description,
+    timestamp: Date.now(),
   };
-  taskListRepository.saveTask(taskListId, newTask);
+  const event = addTaskToList(selectTaskList(taskListId), commandPayload);
+  publishTaskListEvent(event);
+  taskListRepository.build();
 }
 
 export function getTaskLists(ownerId: string): TaskList[] {
   return taskListRepository.findAllAllowedTaskListsForUser(ownerId);
 }
 export function getTaskList(id: string) {
-  return taskListRepository.findTaskListById(id);
+  // console.log('getTaskLists:', selectTaskList(id));
+  return taskListRepository.findTaskListById(id) as TaskList;
 }
 
 export function addTaskList(createTaskListDto: CreateTaskListDto): string {
-  const t = Date.now();
   const newTaskList = {
-    ...createTaskListDto,
-    id: randomUUID(),
-    tasks: createTaskListDto.tasks || [],
-    users: [{ role: 'editor' as const, userId: createTaskListDto.authorId }],
-    invitations: [],
-    ownerId: createTaskListDto.authorId,
-    creatorId: createTaskListDto.authorId,
+    name: createTaskListDto.name,
+    authorId: createTaskListDto.authorId,
+    taskListId: randomUUID(),
     description: createTaskListDto.description || '',
-    createdAt: t,
-    updatedAt: t,
-    status: 'active' as const,
+    timestamp: Date.now(),
   };
-
-  // createTaskList(newTaskList);
-  taskListRepository.saveTaskList(newTaskList);
-  return newTaskList.id;
+  const event = createTaskList(newTaskList);
+  publishTaskListEvent(event);
+  taskListRepository.build();
+  return event.taskListId;
 }
 
 export function deleteTaskList(id: string) {
-  taskListRepository.deleteTaskList(id);
+  const event = removeTaskList(selectTaskList(id), {
+    taskListId: id,
+    timestamp: Date.now(),
+    authorId: 'todo',
+  });
+  publishTaskListEvent(event);
+  taskListRepository.build();
 }
 
 export function renameTaskList(id: string, name: string) {
-  taskListRepository.updateTaskListName(id, name);
+  const event = renameGivenTaskList(selectTaskList(id), {
+    taskListId: id,
+    timestamp: Date.now(),
+    authorId: 'todo',
+    newName: name,
+  });
+  publishTaskListEvent(event);
+  taskListRepository.build();
 }

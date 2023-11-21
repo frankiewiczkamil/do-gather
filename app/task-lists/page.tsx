@@ -1,5 +1,5 @@
 import { getTaskLists } from '@/services/lists/TaskListService';
-import { getInvitations } from '@/services/invitation/InvitationService';
+import { getInvitations } from '@/services/lists/invitation/InvitationService';
 import { PATH } from '@/app/task-lists/common';
 import { createAcceptInvitationAction, createTaskListFactory } from '@/app/task-lists/actions';
 import Link from 'next/link';
@@ -9,7 +9,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 import { InvitationPreviewRow, Invitations } from '@/components/Invitations';
 import { getUserEmailById } from '@/services/users/UsersService';
-import { PreviewInvitationDto } from '@/services/invitation/Invitation';
+import { PreviewInvitationDto } from '@/services/lists/invitation/Invitation';
 
 // it seems that for some reason revalidation from [id]/action doesn't work, thus we need to force dynamic for now
 export const dynamic = 'force-dynamic';

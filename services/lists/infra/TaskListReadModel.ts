@@ -1,22 +1,20 @@
-import { TaskListQuery } from '@/services/lists/TaskListPorts';
-import { TaskList, TaskListEventFailed, TaskListIdentifier, UserIdentifier } from '@/services/lists/TaskList';
+import { Invitation, TaskList, TaskListEventFailed, TaskListIdentifier, UserIdentifier } from '@/services/lists/TaskList';
 import { applyTaskListEvent, createTaskListBase, TaskListBase, TaskListSuccessEvent } from '@/services/lists/infra/store/TaskListReducer';
 import { getEventLog } from '@/services/lists/infra/store/TaskListEventStore';
 
 let taskListByTaskListId: Record<TaskListIdentifier, TaskList | TaskListBase> = {};
 let taskListIdByUserId: Record<UserIdentifier, TaskListIdentifier[]> = {};
-type ReadModel = {
-  taskListByTaskListId: Record<TaskListIdentifier, TaskList | TaskListBase>;
-  taskListIdByUserId: Record<UserIdentifier, TaskListIdentifier[]>;
-};
-let readModel: ReadModel;
+let invitationByUserId: Record<UserIdentifier, Invitation2[]>;
 
 function findTaskListById(id: string) {
   return taskListByTaskListId[id];
 }
 
 function findAllAllowedTaskListsForUser(ownerId: string) {
-  return taskListIdByUserId[ownerId]?.map((id) => taskListByTaskListId[id]);
+  return taskListIdByUserId[ownerId]?.map((id) => taskListByTaskListId[id]).filter((list) => list.status === 'active') as TaskList[];
+}
+function findAllInvitationsForUser(userId: string) {
+  return invitationByUserId[userId] || [];
 }
 
 function calculateAllTaskListsState(taskListEvents: Array<TaskListEventFailed | TaskListSuccessEvent>): Record<string, TaskListBase | TaskList> {
@@ -41,11 +39,30 @@ function buildTaskListByUserId(taskLists: TaskList[]) {
     {} as Record<UserIdentifier, TaskListIdentifier[]>,
   );
 }
+type Invitation2 = { taskListId: TaskListIdentifier; inviterId: UserIdentifier } & Invitation;
+function buildInvitationByUserId(taskLists: TaskList[]) {
+  return taskLists.reduce(
+    (acc, taskList) => {
+      const invitations = taskList.invitations;
+      invitations.forEach((invitation) => {
+        acc[invitation.inviteeId] = acc[invitation.inviteeId] || [];
+        acc[invitation.inviteeId].push({ taskListId: taskList.id, ...invitation });
+      });
+
+      return acc;
+    },
+    {} as Record<UserIdentifier, Invitation2[]>,
+  );
+}
 function build() {
   taskListByTaskListId = calculateAllTaskListsState(getEventLog());
   taskListIdByUserId = buildTaskListByUserId(Object.values(taskListByTaskListId) as TaskList[]);
+  invitationByUserId = buildInvitationByUserId(Object.values(taskListByTaskListId) as TaskList[]);
 }
+build();
 export default {
   findTaskListById,
   findAllAllowedTaskListsForUser,
-} as TaskListQuery;
+  findAllInvitationsForUser,
+  build,
+};

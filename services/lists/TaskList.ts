@@ -39,4 +39,6 @@ export type Invitation = {
   invitationId: string;
   inviteeId: UserIdentifier;
   inviteeRole: Role;
+  inviterId: UserIdentifier;
+  status: 'pending' | 'accepted' | 'rejected';
 };

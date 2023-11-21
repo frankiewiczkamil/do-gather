@@ -65,7 +65,10 @@ function applyAddTaskToListSucceeded(taskList: TaskList, event: AddTaskToListSuc
 function applyInviteUserToTaskListSucceeded(taskList: TaskList, event: InviteUserToTheTaskListSucceeded) {
   return {
     ...taskList,
-    invitations: [...taskList.invitations, { inviteeRole: event.inviteeRole, inviteeId: event.inviteeId, invitationId: event.invitationId }],
+    invitations: [
+      ...taskList.invitations,
+      { inviteeRole: event.inviteeRole, inviteeId: event.inviteeId, invitationId: event.invitationId, inviterId: event.authorId, status: 'pending' as const },
+    ],
     updatedAt: event.timestamp,
   };
 }
@@ -78,7 +81,13 @@ function applyAcceptInvitationToTaskListSucceeded(taskList: TaskList, event: Acc
   } else {
     return {
       ...taskList,
-      invitations: taskList.invitations.filter((invitation) => invitation.invitationId !== event.invitationId),
+      invitations: taskList.invitations.map((invitation) => {
+        if (invitation.invitationId === event.invitationId) {
+          return { ...invitation, status: 'accepted' as const };
+        } else {
+          return invitation;
+        }
+      }),
       users: [...taskList.users, { role: invitation.inviteeRole, userId: invitation.inviteeId }],
       updatedAt: event.timestamp,
     };

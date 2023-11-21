@@ -207,7 +207,9 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [],
-        invitations: [{ inviteeRole: 'editor', inviteeId: 'invitee-id', invitationId: inviteEvent.invitationId }],
+        invitations: [
+          { inviteeRole: 'editor', inviteeId: 'invitee-id', invitationId: inviteEvent.invitationId, inviterId: inviteEvent.authorId, status: 'pending' },
+        ],
         tasks: [],
         status: 'active',
         name: taskList.name,
@@ -219,7 +221,13 @@ describe('TaskListReducer', () => {
     });
 
     it('should accept invitation to task-list on accept-invitation-to-task-list-succeeded event', () => {
-      const invitation: Invitation = { inviteeRole: 'editor', inviteeId: 'invitee-id', invitationId: 'invitation-id' };
+      const invitation: Invitation = {
+        inviteeRole: 'editor',
+        inviteeId: 'invitee-id',
+        invitationId: 'invitation-id',
+        status: 'pending',
+        inviterId: 'inviter-id',
+      };
       const taskList = {
         id: 'my-id',
         users: [],
@@ -243,7 +251,15 @@ describe('TaskListReducer', () => {
       expect(result).toStrictEqual({
         id: taskList.id,
         users: [{ role: 'editor', userId: 'invitee-id' }],
-        invitations: [],
+        invitations: [
+          {
+            inviteeRole: 'editor',
+            inviteeId: 'invitee-id',
+            invitationId: invitation.invitationId,
+            inviterId: invitation.inviterId,
+            status: 'accepted',
+          },
+        ],
         tasks: [],
         status: 'active',
         name: taskList.name,
