@@ -10,11 +10,11 @@ import removeTaskList from '@/services/lists/aggregate/deleteTaskList';
 
 // for now this application service is just a proxy to the repository as there are no business rules yet
 // but when business rules arise, this service will translate DTOs to domain objects and call the domain service
-export function addTask(taskListId: string, task: CreateTaskDto) {
+export function addTask(taskListId: string, task: CreateTaskDto, authorId: string) {
   const taskId = randomUUID();
   const commandPayload = {
     taskListId,
-    authorId: 'todo',
+    authorId,
     name: task.name,
     id: taskId,
     description: task.description,
@@ -47,21 +47,21 @@ export function addTaskList(createTaskListDto: CreateTaskListDto): string {
   return event.taskListId;
 }
 
-export function deleteTaskList(id: string) {
+export function deleteTaskList(id: string, authorId: string) {
   const event = removeTaskList(selectTaskList(id), {
     taskListId: id,
     timestamp: Date.now(),
-    authorId: 'todo',
+    authorId,
   });
   publishTaskListEvent(event);
   taskListRepository.build();
 }
 
-export function renameTaskList(id: string, name: string) {
+export function renameTaskList(id: string, name: string, authorId: string) {
   const event = renameGivenTaskList(selectTaskList(id), {
     taskListId: id,
     timestamp: Date.now(),
-    authorId: 'todo',
+    authorId,
     newName: name,
   });
   publishTaskListEvent(event);

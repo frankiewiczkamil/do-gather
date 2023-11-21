@@ -10,8 +10,10 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 export function createAddTaskToListAction(taskListId: string) {
   return async function addTaskToListAction(formData: FormData) {
     'use server';
+    const session = await getServerSession(authOptions);
+    const author = session?.user as { id: string };
     const createTaskDto = formDataToCreateTaskListDto(formData);
-    addTask(taskListId, createTaskDto);
+    addTask(taskListId, createTaskDto, author?.id);
     revalidatePath(`${PATH}/${taskListId}`);
     revalidatePath(PATH); // it doesn't work for now (v13.5.5), thus task-list uses const dynamic = 'force-dynamic' as a workaround
   };
@@ -27,7 +29,9 @@ function formDataToCreateTaskListDto(formData: FormData) {
 export function createDeleteTaskListAction(taskListId: string) {
   return async function deleteTaskListAction() {
     'use server';
-    deleteTaskList(taskListId);
+    const session = await getServerSession(authOptions);
+    const author = session?.user as { id: string };
+    deleteTaskList(taskListId, author.id);
     revalidatePath(PATH);
     redirect(PATH);
   };
@@ -37,7 +41,9 @@ export function createRenameTaskListAction(taskListId: string) {
   return async function renameTaskAction(formData: FormData) {
     'use server';
     const { name } = formDataToRenameTaskListDto(formData);
-    renameTaskList(taskListId, name);
+    const session = await getServerSession(authOptions);
+    const author = session?.user as { id: string };
+    renameTaskList(taskListId, name, author.id);
     revalidatePath(PATH);
   };
 }
