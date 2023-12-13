@@ -2,6 +2,8 @@ Exercise project for learning next v13. It is an app for collaborative task mana
 
 Additionally, tak-list is modeled as an aggregate root calculated from events (event sourcing).
 
+It can be compared with simpler, more classical approach [that I've made in java](https://github.com/frankiewiczkamil/do-gather-java)
+
 ---
 todo:
 - improve task-list view
