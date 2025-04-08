@@ -21,14 +21,27 @@ export default function acceptInvitationToTaskList(
   taskList: TaskList,
   { taskListId, authorId, timestamp, invitationId }: AcceptInvitationToTaskListArgs,
 ): AcceptInvitationToTaskListEvent {
-  if (taskList.users.some((user) => user.userId === authorId)) {
+  const invitation = taskList.invitations.find((invitation) => invitation.invitationId === invitationId);
+
+  if (!invitation) {
     return {
       type: 'accept-invitation-to-task-list-failed',
       taskListId,
       timestamp,
       authorId,
       status: 'failed',
-      error: `User ${authorId} is already on the list`,
+      error: `Invitation ${invitationId} does not exist`,
+    };
+  }
+  const inviteeId = invitation.inviteeId;
+  if (taskList.users.some((user) => user.userId === inviteeId)) {
+    return {
+      type: 'accept-invitation-to-task-list-failed',
+      taskListId,
+      timestamp,
+      authorId,
+      status: 'failed',
+      error: `User ${inviteeId} is already on the list`,
     };
   }
   return {
