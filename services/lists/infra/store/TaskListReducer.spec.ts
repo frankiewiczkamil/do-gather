@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { applyTaskListEvent, createTaskListBase } from '@/services/lists/infra/store/TaskListReducer';
 import { AcceptInvitationToTaskListSucceeded } from '@/services/lists/aggregate/acceptInvitation';
-import { Invitation } from '@/services/lists/TaskList';
+import { Invitation, TaskList, TaskListEventFailed } from '@/services/lists/TaskList';
 
 describe('TaskListReducer', () => {
   describe('createTaskListBase', () => {
@@ -268,6 +268,87 @@ describe('TaskListReducer', () => {
         createdAt: taskList.createdAt,
         updatedAt: acceptInvitationEvent.timestamp,
       });
+    });
+
+    it.each([
+      {
+        type: 'delete-task-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'that-other-guy',
+        status: 'failed',
+        error: `Task list with id not found`,
+      } as const,
+      {
+        type: 'rename-task-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'that-other-guy',
+        status: 'failed',
+        error: `Task list with id not found`,
+      } as const,
+
+      {
+        type: 'add-task-to-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'that-other-guy',
+        status: 'failed',
+        task: { id: 'task-id', name: 'task-name', description: 'task-description' },
+        error: 'zonk',
+      } as const,
+      {
+        type: 'delete-task-from-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'that-other-guy',
+        status: 'failed',
+        taskId: 'task-id',
+        error: 'zonk',
+      } as const,
+      {
+        type: 'invite-user-to-task-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'invitee-id',
+        status: 'failed',
+        inviteeId: 'invitee-id',
+        inviteeRole: 'editor',
+        invitationId: 'invitation-id',
+        error: 'zonk',
+      } as const,
+      {
+        type: 'accept-invitation-to-task-list-failed',
+        taskListId: 'my-id',
+        timestamp: 999,
+        authorId: 'invitee-id',
+        status: 'failed',
+        invitationId: 'invitation-id',
+        error: 'zonk',
+      } as const,
+    ])('should do not affect aggregate on failed event', (event: TaskListEventFailed) => {
+      const invitation: Invitation = {
+        inviteeRole: 'editor',
+        inviteeId: 'invitee-id',
+        invitationId: 'invitation-id',
+        status: 'accepted',
+        inviterId: 'inviter-id',
+      };
+      const taskList: TaskList = {
+        id: 'my-id',
+        users: [{ role: 'editor', userId: 'invitee-id' }],
+        invitations: [invitation],
+        tasks: [],
+        status: 'active' as const,
+        name: 'my-name',
+        ownerId: 'owner-id',
+        creatorId: 'creator-id',
+        createdAt: 123,
+        updatedAt: 123,
+      };
+
+      const result = applyTaskListEvent(taskList, event);
+      expect(result).toStrictEqual(taskList);
     });
   });
 });
